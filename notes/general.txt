@@ -1,0 +1,65 @@
+
+working on FreeBSD 11.0 Release
+
+IPFW Man Page
+  https://www.freebsd.org/cgi/man.cgi?ipfw
+
+IPFW FreeBSD Handbook
+  https://www.freebsd.org/doc/handbook/firewalls-ipfw.html
+
+net.inet.ip.fw.enable
+net.inet.ether.ipfw
+net.inet.link.bridge.ipfw
+
+
+Timeline
+========
+  March 2
+    final deadline
+    recommendation for degree
+      paper
+      proof of submission
+
+  februrary 23
+    paper, no submission
+    goes to grad committee to judge
+    need to know which conference is it going to
+
+  janurary 26
+    done with implementation
+    all test results are in, data ready
+    writing paper
+
+  janurary 2
+    first day of winter quarter
+
+  december 9
+    end of fall quarter
+
+  december 1
+    implementation "complete", just needs tweaks
+
+  october 15
+    hardware ready?
+
+need to consider what to about packet retransmissions, what if we drop a packet
+because it's bad, then it gets' retransmitted
+
+notes
+  - focus is on performance, what the system does with the packets is not in
+    the scope of the project
+  - hostnames in rules are resolved when they're added
+  - the development part might be pretty easy, focus should be on analysis
+    - how is this better
+    - how is this worse
+  - dynamic rules are useful for allowing return traffic after a packet goes
+    out from the internal network. Works for UPD and TCP
+  - pipes/dummynet can limit bandwidth
+
+example ruleset
+- first allow,deny ends the search, so having a prob % allow will let us get
+  the probabilistic "just match and move on" that we want
+
+  ipfw add 100 set 1 prob 0.5 allow
+  ipfw add 101 set 2 deny ip from not 1.2.3.4 to any
+  ...

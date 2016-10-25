@@ -1,0 +1,20 @@
+
+FreeBSD performance monitoring tools
+  - iperf
+
+existing work on ipfw performance
+  - 
+
+how to test performance
+  - need to consider how performance changes with more rules, 
+    - different kinds of rules?
+    - stateful?
+    - dynamic rules?
+  - could we use IPFW to test itself?
+    - dummynet
+
+utilities for measuring system performance
+  https://www.freebsd.org/ports/benchmarks.html
+
+netperf
+  https://people.freebsd.org/~pjd/netperf/

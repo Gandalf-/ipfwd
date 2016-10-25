@@ -1,0 +1,14 @@
+system load will need to be queried so that ipfw can dynamically update the
+percentage of packets that it's going to ignore
+
+when
+  - I'm thinking that it'll be done on an interval
+    - based on time or packet number?
+  - doing the check before every packet is not reasonable
+
+where
+  - option: have a seperate daemon running that updates a global variable that
+    ipfw uses
+
+how
+  - there are programs that can already do this for me
