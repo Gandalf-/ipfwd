@@ -19,8 +19,11 @@ general notes
 
   - could have daemon that periodically reruns
     - " ipfw add 100 set 1 prob % allow"
-    - or set a sysctl value. IPFW already has a lot of sysctl values it works with
+    - or set a sysctl value. IPFW already has a lot of sysctl values it works
+      with
       - eg: net.inet.ip.*
+  
+  - https://github.com/Gandalf-/ipfwd
 
 droplets
 ========
