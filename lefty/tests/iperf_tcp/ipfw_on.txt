@@ -1,0 +1,21 @@
+609 687 719 717 649 637 674 674 615
+
+avg: 664
+
+freebsd@righty ~> sudo iperf -p 80 -c lefti.anardil.net
+
+freebsd@lefty ~> sudo iperf -p 80 -s
+------------------------------------------------------------
+Server listening on TCP port 80
+TCP window size: 64.0 KByte (default)
+------------------------------------------------------------
+[ ID] Interval       Transfer     Bandwidth
+[  4]  0.0-10.0 sec   728 MBytes   609 Mbits/sec
+[  5]  0.0-10.0 sec   820 MBytes   687 Mbits/sec
+[  4]  0.0-10.0 sec   858 MBytes   719 Mbits/sec
+[  5]  0.0-10.0 sec   857 MBytes   717 Mbits/sec
+[  4]  0.0-10.0 sec   774 MBytes   649 Mbits/sec
+[  4]  0.0-10.0 sec   761 MBytes   637 Mbits/sec
+[  5]  0.0-10.0 sec   806 MBytes   674 Mbits/sec
+[  4]  0.0-10.0 sec   806 MBytes   674 Mbits/sec
+[  5]  0.0-10.0 sec   734 MBytes   615 Mbits/sec

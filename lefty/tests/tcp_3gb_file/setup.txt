@@ -1,0 +1,5 @@
+freebsd@righty ~> cat onegigabyte.txt onegigabyte.txt onegigabyte.txt | nc lefti.anardil.net 80
+
+freebsd@lefty ~> sudo nc -lk 80 > /dev/null
+
+throughput values are from iftop TOTAL: PEAK:

@@ -1,0 +1,10 @@
+installed 
+  tmux 
+  vim 
+  git 
+  iftop 
+  htop 
+  stress-ng
+  bash
+
+configuration
