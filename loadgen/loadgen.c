@@ -55,7 +55,7 @@ int main(int argc, char **argv){
     if (x < 1 || y < 1 || z < 1)
       x = y = z = 0xffffffff;
 
-    for (int i = 0; i < 10; i++) {
+    for (i = 0; i < 10; i++) {
       x = sqrt(x); x = sqrt(x); x = sqrt(x);
       y = sqrt(y); y = sqrt(y); y = sqrt(y);
       z = sqrt(z); z = sqrt(z); z = sqrt(z);
