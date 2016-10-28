@@ -61,7 +61,7 @@ int main(int argc, char **argv){
       z = sqrt(z); z = sqrt(z); z = sqrt(z);
     }
 
-    /* check times */
+    /* check times less frequently so we focus on the math */
     if (counter == 50) {
       time(&end);
       elapsed = difftime(end, start);

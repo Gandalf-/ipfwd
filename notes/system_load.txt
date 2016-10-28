@@ -12,3 +12,10 @@ where
 
 how
   - there are programs that can already do this for me
+
+
+top source code is in
+  ./usr/src/contrib/top
+  ./usr/src/usr.bin/top
+
+  https://github.com/freebsd/freebsd/tree/master/usr.bin/top
