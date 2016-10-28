@@ -1,6 +1,11 @@
 CC=cc
 FLAGS=
-SRC= loadgen.c
+SRC=loadgen.c
+OUT=loadgen
 
-ipfwd: ${SRC}
-	${CC} ${FLAGS} -o loadgen ${SRC}
+all: ${SRC}
+	${CC} ${FLAGS} -o ${OUT} ${SRC}
+
+clean:
+	@rm -rf ${OUT} *.o *.core
+	@echo done
