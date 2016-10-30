@@ -1,9 +1,13 @@
-
+>>>
+notes on performance testing tools, techniques, and results
+<<<
+ 
 FreeBSD performance monitoring tools
   - iperf
 
 existing work on ipfw performance
-  - 
+  - general freebsd network performance
+    - https://wiki.freebsd.org/NetworkPerformanceTuning 
 
 how to test performance
   - need to consider how performance changes with more rules, 

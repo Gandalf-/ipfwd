@@ -6,7 +6,7 @@
 int main(int argc, char **argv){
 
   int loads[100] = {0};
-  int load, i;
+  int counter, load, i;
   double elapsed, duration;
   float x, y, z;
   time_t start, end;
@@ -42,6 +42,7 @@ int main(int argc, char **argv){
   }
 
   /* pre loop setup */
+  counter = 0;
   tim.tv_sec = 0;
   tim.tv_nsec = loads[load];
   time(&start);
@@ -54,15 +55,21 @@ int main(int argc, char **argv){
     if (x < 1 || y < 1 || z < 1)
       x = y = z = 0xffffffff;
 
-    for (int i = 0; i < 10; i++) {
+    for (i = 0; i < 10; i++) {
       x = sqrt(x); x = sqrt(x); x = sqrt(x);
       y = sqrt(y); y = sqrt(y); y = sqrt(y);
       z = sqrt(z); z = sqrt(z); z = sqrt(z);
     }
 
-    /* check times */
-    time(&end);
-    elapsed = difftime(end, start);
+    /* check times less frequently so we focus on the math */
+    if (counter == 50) {
+      time(&end);
+      elapsed = difftime(end, start);
+      counter = 0;
+    }
+    else {
+      counter += 1;
+    }
 
     if(nanosleep(&tim , &tim2) < 0 )
       return -1;

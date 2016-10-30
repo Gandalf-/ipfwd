@@ -12,3 +12,45 @@ where
 
 how
   - there are programs that can already do this for me
+
+
+top source code is in
+  ./usr/src/contrib/top
+  ./usr/src/usr.bin/top
+
+  https://github.com/freebsd/freebsd/tree/master/usr.bin/top
+
+  machine.c
+    460 void
+    461 get_system_info(struct system_info *si)
+    462 {
+    463   long total;
+    464   struct loadavg sysload;
+    465   int mib[2];
+    466   struct timeval boottime;
+    467   uint64_t arc_stat, arc_stat2;
+    468   int i, j;
+    469   size_t size;
+    470
+    471   /* get the CPU stats */
+    472   size = (maxid + 1) * CPUSTATES * sizeof(long);
+    473   if (sysctlbyname("kern.cp_times", pcpu_cp_time, &size, NULL, 0) == -1)
+    474     err(1, "sysctlbyname kern.cp_times");
+    475   GETSYSCTL("kern.cp_time", cp_time);
+--> 476   GETSYSCTL("vm.loadavg", sysload);
+    477   GETSYSCTL("kern.lastpid", lastpid);
+
+    1160 static void
+    1161 getsysctl(const char *name, void *ptr, size_t len)
+    1162 {
+    1163   size_t nlen = len;
+    1164
+--> 1165   if (sysctlbyname(name, ptr, &nlen, NULL, 0) == -1) {
+    1166   fprintf(stderr, "top: sysctl(%s...) failed: %s\n", name,          
+     ...
+    1169   }
+    1170   if (nlen != len) {
+    1171   fprintf(stderr, "top: sysctl(%s...) expected %lu, got %lu\n",     
+     ...
+    1174   }
+    1175 }

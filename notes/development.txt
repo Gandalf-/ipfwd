@@ -1,15 +1,17 @@
+>>>
+notes on development work, design decisions and resources for working with the
+code base
+<<<
+
 todo
-====
   - go with daemon approach to start, update a sysctl variable
 
 development cycle
-=================
   - kldunload ipfw && kldload ipfw
     - firewall rules don't seem to be loaded when ipfw is unloaded and reloaded. 
   - makefile in /sys/modules/ipfw
 
-general notes
-=============
+notes: general
   - IPFW is composed of two parts: a userland utility for controlling firewall
     functionality and a kernel-level packet filter engine. 
     - kernel level packet filtering engine
@@ -25,9 +27,16 @@ general notes
   
   - https://github.com/Gandalf-/ipfwd
 
-droplets
-========
-  righty
-    freebsd : rightyrighty
-  lefty
-    freebsd : leftylefty
+notes: droplets
+  - righty
+    - freebsd : rightyrighty
+  - lefty
+    - freebsd : leftylefty
+
+example ruleset
+- first allow,deny ends the search, so having a prob % allow will let us get
+  the probabilistic "just match and move on" that we want
+
+  ipfw add 100 set 1 prob 0.5 allow
+  ipfw add 101 set 2 deny ip from not 1.2.3.4 to any
+  ...
