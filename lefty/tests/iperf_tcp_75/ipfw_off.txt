@@ -1,0 +1,16 @@
+Mon Oct 31 00:38:07 UTC 2016
+------------------------------------------------------------
+Server listening on TCP port 80
+TCP window size: 64.0 KByte (default)
+------------------------------------------------------------
+[  4] local 10.138.160.91 port 80 connected with 10.138.128.154 port 62442
+[ ID] Interval       Transfer     Bandwidth
+[  4]  0.0-10.0 sec  2.45 GBytes  2.10 Gbits/sec
+[  5] local 10.138.160.91 port 80 connected with 10.138.128.154 port 62443
+[  5]  0.0-10.2 sec  2.31 GBytes  1.95 Gbits/sec
+[  4] local 10.138.160.91 port 80 connected with 10.138.128.154 port 62444
+[  4]  0.0-10.0 sec  2.34 GBytes  2.01 Gbits/sec
+[  5] local 10.138.160.91 port 80 connected with 10.138.128.154 port 62445
+[  5]  0.0-10.0 sec  2.32 GBytes  1.99 Gbits/sec
+[  4] local 10.138.160.91 port 80 connected with 10.138.128.154 port 62446
+[  4]  0.0-10.0 sec  2.29 GBytes  1.96 Gbits/sec

@@ -1,7 +1,7 @@
 CC=cc
 FLAGS=
 SRC=loadgen.c
-OUT=loadgen
+OUT=~/ipfwd/bin/loadgen
 
 all: ${SRC}
 	${CC} ${FLAGS} -o ${OUT} ${SRC}
