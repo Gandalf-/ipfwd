@@ -1,0 +1,16 @@
+Mon Oct 31 00:23:55 UTC 2016
+------------------------------------------------------------
+Server listening on TCP port 80
+TCP window size: 64.0 KByte (default)
+------------------------------------------------------------
+[  4] local 10.138.160.91 port 80 connected with 10.138.128.154 port 55314
+[ ID] Interval       Transfer     Bandwidth
+[  4]  0.0-10.0 sec  2.30 GBytes  1.97 Gbits/sec
+[  5] local 10.138.160.91 port 80 connected with 10.138.128.154 port 55315
+[  5]  0.0-10.0 sec  2.45 GBytes  2.10 Gbits/sec
+[  4] local 10.138.160.91 port 80 connected with 10.138.128.154 port 55316
+[  4]  0.0-10.0 sec  2.30 GBytes  1.97 Gbits/sec
+[  5] local 10.138.160.91 port 80 connected with 10.138.128.154 port 55317
+[  5]  0.0-10.0 sec  2.31 GBytes  1.98 Gbits/sec
+[  4] local 10.138.160.91 port 80 connected with 10.138.128.154 port 55318
+[  4]  0.0-10.0 sec  2.30 GBytes  1.98 Gbits/sec

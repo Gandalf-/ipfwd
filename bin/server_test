@@ -1,0 +1,22 @@
+#!/usr/local/bin/bash
+
+touch readme.md
+sudo ipfw show > ipfw.rules
+
+echo "Starting IPFW on test"
+sudo service ipfw start
+echo "Ready, ^C when CPU usage drops"
+date >> ipfw_on.txt
+sudo iperf -p 80 -s >> ipfw_on.txt
+echo
+
+echo "Starting IPFW off test"
+sudo service ipfw stop
+echo "Ready, ^C when CPU usage drops"
+date >> ipfw_off.txt
+sudo iperf -p 80 -s >> ipfw_off.txt
+echo
+
+echo "Done"
+~/ipfwd/bin/process_results ipfw_on.txt >> readme.md
+~/ipfwd/bin/process_results ipfw_off.txt >> readme.md
