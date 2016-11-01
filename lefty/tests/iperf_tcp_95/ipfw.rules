@@ -9,7 +9,7 @@
 00900       0           0 allow ipv6-icmp from any to any ip6 icmp6types 1
 01000       0           0 allow ipv6-icmp from any to any ip6 icmp6types 2,135,136
 01100       0           0 check-state
-01200 4401335   229728328 allow tcp from me to any established
+01200 4314082   224903856 allow tcp from me to any established
 01300       0           0 allow tcp from me to any setup keep-state
 01400       0           0 allow udp from me to any keep-state
 01500       0           0 allow icmp from me to any keep-state
@@ -22,9 +22,9 @@
 02200       0           0 allow ipv6-icmp from any to any ip6 icmp6types 128,129
 02300       0           0 allow icmp from any to any icmptypes 3,4,11
 02400       0           0 allow ipv6-icmp from any to any ip6 icmp6types 3
-02500     130        8256 allow tcp from any to me dst-port 22
-02600 8727869 13089110552 allow tcp from any to me dst-port 80
-65000       3         120 count ip from any to any
+02500      69        3948 allow tcp from any to me dst-port 22
+02600 8563740 12842843576 allow tcp from any to me dst-port 80
+65000       0           0 count ip from any to any
 65100       0           0 deny { tcp or udp } from any to any dst-port 135-139,445 in
 65200       0           0 deny { tcp or udp } from any to any dst-port 1026,1027 in
 65300       0           0 deny { tcp or udp } from any to any dst-port 1433,1434 in
@@ -32,5 +32,5 @@
 65500       0           0 deny ip from any to 224.0.0.0/24 in
 65500       0           0 deny udp from any to any dst-port 520 in
 65500       0           0 deny tcp from any 80,443 to any dst-port 1024-65535 in
-65500       3         120 deny log logamount 500 ip from any to any
+65500       0           0 deny log logamount 500 ip from any to any
 65535       0           0 deny ip from any to any
