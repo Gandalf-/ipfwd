@@ -15,7 +15,7 @@ int main(int argc, char **argv){
   /* supported loads */
   loads[15] = 30000;
   loads[25] = 20000;
-  loads[50] = 10000;
+  loads[50] = 9200;
   loads[75] = 8500;
   loads[95] = 7800;
 
