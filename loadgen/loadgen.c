@@ -17,6 +17,7 @@ int main(int argc, char **argv){
   loads[25] = 20000;
   loads[50] = 10000;
   loads[75] = 8500;
+  loads[95] = 7800;
 
   if (argc != 3) {
     printf("usage: %s [cpu load %%] [duration]\n", argv[0]);
