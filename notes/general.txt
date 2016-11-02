@@ -27,6 +27,8 @@ notes: general
 
   - freebsd network stack parallelization
     - https://wiki.freebsd.org/200805DevSummit?action=AttachFile&do=get&target=20080515-stack-parallelism.pdf
+  - IPFW modernization project
+    - https://wiki.freebsd.org/IpfwNg
 
 notes: performance
   - IPFW high performance alternative?
