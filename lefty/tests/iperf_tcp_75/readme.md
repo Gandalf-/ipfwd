@@ -7,3 +7,5 @@ ipfw_on.txt average: 2.338000 GBytes
 ipfw_off.txt average: 2.326000 GBytes
 ipfw_on.txt average: 2.365000 GBytes
 ipfw_off.txt average: 2.342000 GBytes
+ipfw_on.txt average: 2.340000 GBytes
+ipfw_off.txt average: 2.335000 GBytes
