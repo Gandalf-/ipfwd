@@ -1,0 +1,7 @@
+#!/usr/local/bin/bash
+
+global_options="-l 20 -c -C -H lefti.anardil.net"
+test_type="TCP_STREAM"
+test_options=" -P 80"
+
+sudo netperf "$global_options" -t "$test_type" -- "$test_options"
