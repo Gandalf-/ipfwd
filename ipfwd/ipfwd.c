@@ -1,22 +1,14 @@
-#include <kvm.h>
-#include <sys/param.h>
-#include <sys/pcpu.h>
-#include <sys/sysctl.h>
-
 #include <stdio.h>
 #include <stdlib.h>
 
 int main(int argc, char **argv) {
 
-  struct kvm_t kd;
-  struct pcpu *pcpu = calloc(1, sizeof(struct pcpu));
+  double loads[3];
+  int ret = getloadavg(loads, 3);
 
-  if (! pcpu) {
-    fprintf(stderr, "error: calloc\n");
-    return -1;
+  for (int i = 0; i < 3; i++) {
+    printf("%d : %f\n", i, loads[i]);
   }
-
-  pcpu = kvm_getpcpu(kd, 0);
 
   return 0;
 }
