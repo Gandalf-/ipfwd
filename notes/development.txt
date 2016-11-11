@@ -4,7 +4,10 @@ code base
 <<<
 
 todo
-  - go with daemon approach to start, update a sysctl variable
+  - go with daemon approach to start
+    - planning to dynamically regenerate rules with new probabilities
+    - ipfw show will help here 
+    - needs to be a c program
 
 development cycle
   - kldunload ipfw && kldload ipfw
@@ -32,6 +35,17 @@ notes: droplets
     - freebsd : rightyrighty
   - lefty
     - freebsd : leftylefty
+    
+notes: workstations
+  - righty
+    - cf418-nel-01
+    - 78:2b:cb:96:b8:73
+    - rightyrighty
+    
+  - lefty
+    - cf418-nel-02
+    - 78:2b:cb:9b:de:32
+    - leftylefty
 
 example ruleset
 - first allow,deny ends the search, so having a prob % allow will let us get
