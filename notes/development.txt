@@ -3,6 +3,11 @@ notes on development work, design decisions and resources for working with the
 code base
 <<<
 
+!!!
+  we only need to designate the very first rule to be managed by ipfwd and
+  update that one to
+    prob %% allow ip from any to any
+
 todo
   - go with daemon approach to start
     - planning to dynamically regenerate rules with new probabilities
