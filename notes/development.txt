@@ -42,14 +42,17 @@ notes: droplets
     - freebsd : leftylefty
     
 notes: workstations
+  - port 922 open on both
+
   - righty
     - cf418-nel-01
-    - 78:2b:cb:96:b8:73
+    - 140.160.139.125 -> 78:2b:cb:96:b8:73
     - rightyrighty
+    - leftylefty!
     
   - lefty
     - cf418-nel-02
-    - 78:2b:cb:9b:de:32
+    - 140.160.139.126 -> 78:2b:cb:9b:de:32
     - leftylefty
 
 example ruleset
