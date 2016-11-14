@@ -1,9 +1,0 @@
-[user]
-        email = austin.voecks@gmail.com
-        name = Gandalf-
-[credential]
-        helper = cache --timeout=3600
-[push]
-        default = simple
-[core]
-	editor = vim
