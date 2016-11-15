@@ -1,0 +1,14 @@
+root@cf498-nel-01 ~/i/r/tests#
+for i in (seq 254); ipfw add 1"$i" deny ip from 1.1.1."$i" to any; end
+
+root@cf418-nel-02 ~/i/r/tests#
+netperf -c -C -l 30 -H cf498-nel-01 -t TCP_STREAM -- -P 80
+MIGRATED TCP STREAM TEST from 0.0.0.0 (0.0.0.0) port 80 AF_INET to
+cf498-nel-01.cs.wwu.edu () port 80 AF_INET : histogram : interval : dirty data
+: demo
+Recv   Send    Send                          Utilization       Service Demand
+Socket Socket  Message  Elapsed              Send     Recv     Send    Recv
+Size   Size    Size     Time     Throughput  local    remote   local   remote
+bytes  bytes   bytes    secs.    10^6bits/s  % C      % C      us/KB   us/KB
+
+ 65536  32768  32768    30.08       934.46   9.34     11.36    6.553   7.970
