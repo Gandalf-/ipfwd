@@ -4,15 +4,6 @@ code base
 <<<
 
 !!!
-  we only need to designate the very first rule to be managed by ipfwd and
-  update that one to
-    prob %% allow ip from any to any
-
-todo
-  - go with daemon approach to start
-    - planning to dynamically regenerate rules with new probabilities
-    - ipfw show will help here 
-    - needs to be a c program
 
 development cycle
   - kldunload ipfw && kldload ipfw
@@ -20,6 +11,11 @@ development cycle
   - makefile in /sys/modules/ipfw
 
 notes: general
+  - could turn off IPFW entirely is load is high enough
+
+  - we only need to designate the very first rule to be managed by ipfwd and
+    update that one to: prob %% allow ip from any to any
+
   - IPFW is composed of two parts: a userland utility for controlling firewall
     functionality and a kernel-level packet filter engine. 
     - kernel level packet filtering engine
@@ -42,23 +38,20 @@ notes: droplets
     - freebsd : leftylefty
     
 notes: workstations
-  - port 922 open on both
-
-  - righty
-    - cf418-nel-01
-    - 140.160.139.125 -> 78:2b:cb:96:b8:73
-    - rightyrighty
-    - leftylefty!
-    
   - lefty
-    - cf418-nel-02
+    - cf418-nel-01:922
+    - 140.160.139.125 -> 78:2b:cb:96:b8:73
+    - root:leftylefty!
+    
+  - righty
+    - cf418-nel-02:922
     - 140.160.139.126 -> 78:2b:cb:9b:de:32
-    - leftylefty
+    - root:rightyrighty!
 
 example ruleset
 - first allow,deny ends the search, so having a prob % allow will let us get
   the probabilistic "just match and move on" that we want
 
-  ipfw add 100 set 1 prob 0.5 allow
+  ipfw add   1 set 1 prob 0.5 allow
   ipfw add 101 set 2 deny ip from not 1.2.3.4 to any
   ...
