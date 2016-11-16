@@ -11,6 +11,8 @@ references:
 considerations:
   - need to consider what to about packet retransmissions, what if we drop a
     packet because it's bad, then it gets' retransmitted
+  - not necessarily effective for stopping incoming attacks, since they can
+    keep pushing until all the packets make it through
 
 notes: general
   - IPFW is maintined with FreeBSD, it's PF that's from OpenBSD
