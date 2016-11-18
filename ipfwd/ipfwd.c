@@ -1,67 +1,106 @@
-#include <time.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h>
+#include "ipfwd.h"
 
-#define check(ret, string) \
-  if (! ret) { \
-    fprintf(stderr, "error: %s\n", string); exit(1);}
+double sigmoid(double x) {
+  /* push low values lower and high values higher
 
-const int sensitivity = 10;
-const int hist_size = 5;
-const char *path = "/bin/echo";
+     sigmoid(0.1) = 0.039
+     sigmoid(0.5) = 0.500
+     sigmoid(0.9) = 0.961
+     */
+  if (x < 0.1) return 0;
+  if (x > 0.9) return 1;
+  return 1 / (1 + exp((x - 0.5) * -8));
+}
+
+void control_ipfw(enum command cmd) {
+  /* enables or disables ipfw
+  */
+  int enabled, on = 1, off = 0;
+  size_t size = sizeof(enabled);
+
+  sysctlbyname(sysctl_ipfw_v4, &enabled, &size, NULL, 0);
+
+  switch(cmd) {
+    case ENABLE:
+      if (! enabled) {
+        sysctlbyname(sysctl_ipfw_v4, NULL, NULL, &on, size);
+        sysctlbyname(sysctl_ipfw_v6, NULL, NULL, &on, size);
+      }
+      /* do nothing if already on */
+      break;
+
+    case DISABLE:
+      if (enabled) {
+        sysctlbyname(sysctl_ipfw_v4, NULL, NULL, &off, size);
+        sysctlbyname(sysctl_ipfw_v6, NULL, NULL, &off, size);
+      }
+      /* do nothing if already off */
+      break;
+  }
+}
 
 void set_probability(double probability) {
-  /*
-    run the ipfw commands to set the new first
-    rule probability
-  */
+  /* run the ipfw commands to set the new first rule probability
+     */
   int status;
   pid_t pid;
+  char *rule_body = "-q add 1 prob 0.000 allow ip from any to any ";
+  char *set_rule_one;
 
   /* delete old rule */
   if ((pid = fork()) == 0) {
-    execl(path, "ipfw", "delete 1", NULL);
+    execl(ipfw_path, "ipfw", "-q delete 1", NULL);
     exit(1); 
   }
   else {
     waitpid(pid, &status, 0);
-    check(!status, "failed deleting old rule"); 
+    /* don't care if this fails */
   }
 
-  /* add new rule */
   if ((pid = fork()) == 0) {
-    char *rule_body = "add 1 prob 0.000 allow ip any to any";
-    char *set_rule_one = malloc(sizeof(rule_body));
-    snprintf(
-        set_rule_one, strlen(rule_body),
-        "add 1 prob %0.3f allow ip any to any", probability);
+    /* prob in [0.1, 0.9] -> add new rule */
+    if (probability > 0) {
+      control_ipfw(ENABLE);
 
-    execl(path, "ifpw", set_rule_one, NULL);
-    exit(1); 
+      set_rule_one = malloc(sizeof(rule_body));
+      snprintf(
+          set_rule_one, strlen(rule_body),
+          "-q add 1 prob %0.3f allow ip from any to any", probability);
+
+      execl(ipfw_path, "ifpw", set_rule_one, NULL);
+      exit(1); 
+    }
+    /* prob > 0.9 -> disable ipfw until load decreases */
+    else if (probability == 1) {
+      control_ipfw(DISABLE);
+      exit(0); 
+    }
+    /* prob < 0.1 -> leave the rule deleted so we check every packet */
+    else {
+      control_ipfw(ENABLE);
+      exit(0);
+    }
   }
   else {
     waitpid(pid, &status, 0);
-    check(!status, "failed setting new rule"); 
+    check(!status, "failed to update ipfw"); 
   }
 }
 
 int main(int argc, char **argv) {
-  /* 
-     monitors system load using uptime()
-     normalizes results by number of cpus
-     */
+  /* monitors system load using uptime() to set probability of IPFW's first
+   * rule allowing any packet. This rule increases performance by sacrificing
+   * complete security. The probability is dynamic based on the current load.
+   */
 
   int status, i, num_cpus;
-  double slope, previous, prediction, error;
-  double probability;
+  double slope, previous, prediction, error, probability;
   double loads[1], history[hist_size];
 
   probability = 0.0;
-  previous = 100;
-  num_cpus = sysconf(_SC_NPROCESSORS_ONLN);
+  previous    = 100;
+  num_cpus    = sysconf(_SC_NPROCESSORS_ONLN);
+  control_ipfw(ENABLE);
 
   while (1) {
     check(getloadavg(loads, 1), "could not get load average");
@@ -70,28 +109,23 @@ int main(int argc, char **argv) {
       history[i] = history[i - 1];
     history[0] = loads[0] / num_cpus * 100;
 
-    error = abs((history[0] - prediction));
-    slope = history[0] - history[1];
+    error      = fabs((history[0] - prediction));
+    slope      = history[0] - history[1];
     prediction = history[0] + slope;
 
     /* only take action when this load is different than the previous one */
     if (slope) {
 
       /* update probability if load has changed enough */
-      if (abs(previous - history[0]) > sensitivity) {
-        probability =  history[0] / 100;
-        previous = history[0];
+      if (fabs(previous - history[0]) > sensitivity) {
+        probability = sigmoid(history[0] / 100);
+        previous    = history[0];
         set_probability(probability);
       }
 
-      /* debug */
       printf(
-          "current: % 02.2f%%, " 
-          "prediction error: % 02.1f%%, "
-          "probability: % 02.1f%%\n",
-          history[0],
-          error, 
-          probability);
+          "current: % 02.3f%%, error: % 02.1f%%, probability: % 02.3f%%\n",
+          history[0], error, probability);
     }
     sleep(1);
   }

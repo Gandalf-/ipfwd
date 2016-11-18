@@ -1,9 +1,12 @@
-CC=clang
-FLAGS=-g
-SRC= ipfwd.c
+FLAGS= -g -lm
+DEBUG= -D DEBUG
+DEPS= ipfwd.o ipfwd.h
 
-ipfwd: ${SRC}
-	${CC} ${FLAGS} -o ipfwd ${SRC}
+ipfwd: ${DEPS}
+	cc ${FLAGS} -o ipfwd ipfwd.c
+
+debug: ${DEPS}
+	cc ${DEBUG} ${FLAGS} -o ipfwd ipfwd.c 
 
 clean:
-	@rm -rf ipfwd
+	rm -rf ipfwd *.o
