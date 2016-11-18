@@ -5,45 +5,47 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-#define check(ret, string) if (! ret) { fprintf(stderr, "error: %s\n", string); return -1;}
+#define check(ret, string) \
+  if (! ret) { \
+    fprintf(stderr, "error: %s\n", string); exit(1);}
 
+const int sensitivity = 10;
 const int hist_size = 5;
 const char *path = "/bin/echo";
 
-static char *errormsg = "unknown error";
-static char *get_rule_one[] = { "ipfw", "show 1", NULL};
-static char *del_rule_one[] = { "ipfw", "delete 1", NULL};
-static char *set_rule_one[] = {
-  "ipfw", "add 1 prob 1.000 allow ip any to any", NULL};
-
-double set_probability(double probability) {
+void set_probability(double probability) {
   /*
-    actually set the new first rule probability
+    run the ipfw commands to set the new first
+    rule probability
   */
+  int status;
   pid_t pid;
 
+  /* delete old rule */
   if ((pid = fork()) == 0) {
-    execv(path, del_rule_one);
+    execl(path, "ipfw", "delete 1", NULL);
     exit(1); 
   }
   else {
     waitpid(pid, &status, 0);
     check(!status, "failed deleting old rule"); 
   }
-}
 
-double update_ipfw(double current, double probability) {
-  /* 
-    update the first rule depending on the current load
-  */
-  int status;
-  double baseline = 40.0;
+  /* add new rule */
+  if ((pid = fork()) == 0) {
+    char *rule_body = "add 1 prob 0.000 allow ip any to any";
+    char *set_rule_one = malloc(sizeof(rule_body));
+    snprintf(
+        set_rule_one, strlen(rule_body),
+        "add 1 prob %0.3f allow ip any to any", probability);
 
-  /* do nothing if we're below 40% utilization */
-  if (current - baseline < 0) 
-    return probability;
-
-  return 0;
+    execl(path, "ifpw", set_rule_one, NULL);
+    exit(1); 
+  }
+  else {
+    waitpid(pid, &status, 0);
+    check(!status, "failed setting new rule"); 
+  }
 }
 
 int main(int argc, char **argv) {
@@ -52,12 +54,13 @@ int main(int argc, char **argv) {
      normalizes results by number of cpus
      */
 
-  int status, i;
-  long num_cpus;
-  double slope, previous, prediction, error, probability;
+  int status, i, num_cpus;
+  double slope, previous, prediction, error;
+  double probability;
   double loads[1], history[hist_size];
 
   probability = 0.0;
+  previous = 100;
   num_cpus = sysconf(_SC_NPROCESSORS_ONLN);
 
   while (1) {
@@ -67,12 +70,21 @@ int main(int argc, char **argv) {
       history[i] = history[i - 1];
     history[0] = loads[0] / num_cpus * 100;
 
-    error = abs((history[0] - prediction) * 100);
+    error = abs((history[0] - prediction));
     slope = history[0] - history[1];
     prediction = history[0] + slope;
 
-    if (slope != 0) {
-      probability = update_ipfw(history[0], probability);
+    /* only take action when this load is different than the previous one */
+    if (slope) {
+
+      /* update probability if load has changed enough */
+      if (abs(previous - history[0]) > sensitivity) {
+        probability =  history[0] / 100;
+        previous = history[0];
+        set_probability(probability);
+      }
+
+      /* debug */
       printf(
           "current: % 02.2f%%, " 
           "prediction error: % 02.1f%%, "

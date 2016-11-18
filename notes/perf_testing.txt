@@ -8,6 +8,8 @@ FreeBSD performance monitoring tools
 existing work on ipfw performance
   - general freebsd network performance
     - https://wiki.freebsd.org/NetworkPerformanceTuning 
+  - Baseline vs IPFW vs PF
+    - https://lists.freebsd.org/pipermail/freebsd-current/2013-April/041323.html
 
 how to test performance
   - need to consider how performance changes with more rules, 

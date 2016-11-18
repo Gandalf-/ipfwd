@@ -1,5 +1,5 @@
-CC=cc
-FLAGS=
+CC=clang
+FLAGS=-g
 SRC= ipfwd.c
 
 ipfwd: ${SRC}
