@@ -1,0 +1,76 @@
+\documentclass[fleqn]{article}%
+\usepackage{amsmath}%
+\usepackage{amsfonts}%
+\usepackage{amssymb}%
+\usepackage{graphicx}
+%-------------------------------------------
+\newtheorem{theorem}{Theorem}
+\newtheorem{acknowledgement}[theorem]{Acknowledgement}
+\newtheorem{algorithm}[theorem]{Algorithm}
+\newtheorem{axiom}[theorem]{Axiom}
+\newtheorem{case}[theorem]{Case}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{conclusion}[theorem]{Conclusion}
+\newtheorem{condition}[theorem]{Condition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{criterion}[theorem]{Criterion}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{exercise}[theorem]{Exercise}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{notation}[theorem]{Notation}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{solution}[theorem]{Solution}
+\newtheorem{summary}[theorem]{Summary}
+\newenvironment{proof}[1][Proof]{\textbf{#1.} }{\ \rule{0.5em}{0.5em}}
+\setlength{\textwidth}{7.0in}
+\setlength{\oddsidemargin}{-0.35in}
+\setlength{\topmargin}{-0.75in}
+\setlength{\textheight}{9.2in}
+\setlength{\parindent}{0.0in}
+\begin{document}
+
+\begin{center}
+  \textbf{Packet Sampling Firewalls \\ Austin Voecks}\\
+\end{center}
+
+\textbf{Outline}
+\begin{itemize}
+    \item Problem
+    \item Abstract
+    \item Subsampling
+    \item Randomized Subsampling
+    \item Dynamic Subsampling
+    \item Heuristic Based Rules
+    \item IPFW
+    \item Benchmarking Performance
+    \item Results
+    \item Security Implications
+    \item Related Work
+    \item Conclusion
+    \item References
+\end{itemize}
+
+\textbf{Problem} \\
+Provide non-disruptive backend network monitoring to OneFS at 40Gb speeds.
+
+\textbf{Abstract} \\
+The performance of FreeBSD’s IPFW can be increased to support 40Gb network
+interfaces without additional specialized hardware through dynamic
+probabilistic rule matching. The probability of rule matching will be based on
+current system load, allowing it to adapt to changing demands on the system.
+The efficacy of packet stream subsampling will also be explored.
+
+\textbf{Subsampling} \\
+Ideally, all network traffic would be carefully inspected; this is impractical
+due to the limitations of CPU and bus speeds. When logging, it’s also limited
+by disk speed. Subsampling traffic provides a way take the temperature of the
+network and increase chances of detecting abnormal behavior; some monitoring is
+better than none. To provide full packet inspection to every packet on system,
+the network links would have to be split into 10Gb links, each passed through
+dedicated hardware. 
+
+\end{document}

@@ -6,9 +6,9 @@ code base
 !!!
 
 development cycle
-  - kldunload ipfw && kldload ipfw
-    - firewall rules don't seem to be loaded when ipfw is unloaded and reloaded. 
-  - makefile in /sys/modules/ipfw
+  - makefile for ipfw itself in /sys/modules/ipfw
+
+questions:
 
 notes: general
   - could turn off IPFW entirely is load is high enough

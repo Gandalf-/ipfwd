@@ -14,6 +14,48 @@ considerations:
   - not necessarily effective for stopping incoming attacks, since they can
     keep pushing until all the packets make it through
 
+what is the project?
+  - add a monitoring daemon for IPFW that can reduce the proportion of incoming
+    and outgoing packets that have the full firewall rule set applied to them.
+    this allows the system to dynamically and gracefully trade-off between
+    policy enforcement and performance.
+
+  - the goal is not to provide the same level of security at higher
+    performance. instead, we're allowing the system to trade between security
+    and performance
+
+  - because not all the packets will have the firewall rules applied to them,
+    some could get through to internal services or contain malicious content
+    that the firewall would have normally prevented. however, as long as the
+    percentage is still above zero, we will have a change to detect, not
+    prevent, these kinds of violations.
+
+  - the mindset for this kind of firewall needs to be of detecting violations,
+    not preventing them. this is still valuable because it can tell you about
+    networking errors, attack vectors and vulnerabilities. in this scenario,
+    logging and inspection of logs is more important than a traditional
+    firewalled system. you can't assume that the firewall all dropped packet
+    types of a kind didn't get through and cause some kind of damage. what
+    you're gaining is the knowledge that these occurred without the cost of
+    inspecting every packet.
+
+  - this kind of system only really makes sense in an environment where the
+    network throughput is higher than the available system resources required
+    to apply the full firewall policy to each packet. it's also based on the
+    idea that network traffic that violates policies is likely to occur again.
+    for instance, a typical persistant threat beacons out to a control center
+    for commands. we might not catch every beacon, but we will eventually,
+    probabilistically catch one of them which will allow us to look more
+    closely into the problem.
+
+future work:
+  - i think more could be done to optimize IPFW rule sets themselves. since IPFW
+    uses a first match wins policy, ordering rules in terms of granularity
+    could produce performance improvements. at the moment, it's up to the
+    system administrators to create rulesets that follow this pattern. it's
+    possible that this could be automated by understanding rule types and
+    sorting them
+
 notes: general
   - IPFW is maintined with FreeBSD, it's PF that's from OpenBSD
   - working on FreeBSD 11.0 Release
@@ -43,3 +85,38 @@ notes: Isilon
 
     - "There’s a workaround for an access zone bug that wants to add more rules."
     - See the patch in https://bugs.west.isilon.com/show_bug.cgi?id=105297
+
+questions
+  - what happens if we get DDOS'd? How do we prevent being taken advantage of
+    because of the back off?
+    - we could have a minimal percentage of packets that we will always check.
+      inherently though, the more traffic there is, the easier that it will be
+      for malicious traffic to get through.
+    - this is a valid concern, but an inherent part of the trade off between
+      policy enforcement and performance that you're buying by using IPFWD
+
+  - what questions will people at the conference have?
+    - what kind of performance gains do you get?
+
+    - what should you do when you find out there have been policy violations
+      and some more violations likely got through without you noticing?
+
+  - how would this work on a public system? eg one on an outward facing network
+    instead of backend?
+    - there's greater risk of violations causing harm, particularly if outside
+      packets can reach protected/ vulnerable internal services. some
+      adversaries may not care about being detected and won't be deterred by
+      the possibility of detection (if they're aware the target system is using
+      IPFWD)
+
+  - how is this better than stock IPFW?
+    - it allows you to reduce the system resource cost of having a firewall
+      enabled in a high bandwidth environment without sacrificing all of them
+      benefits.
+
+  - how is this worse than stock IPFW?
+    - you no longer have any guarantee that IPFW is going to stop everything
+      you specified in your firewall rules. you're no longer enforcing your
+      security policy per se, but instead being notified when it's being 
+      violated, potentially some time after the first violation occurred.
+      there's also the chance that violations may never be detected
