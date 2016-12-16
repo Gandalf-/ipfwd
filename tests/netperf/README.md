@@ -27,6 +27,9 @@ root@cf498-nel-01 ~# netserver
 ## client
 root@cf498-nel-02 ~# netperf -c -C -l 30 -H cf498-nel-01 -t TCP_STREAM -- -P 80
 
+## directory naming convention
+netperf_\<protocol type\>_\<first rule acceptance probability\>
+
 ## ipfw_on.txt
 denotes the results when the firewall was on using the rules in ipfw_rules.txt
 

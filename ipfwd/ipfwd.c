@@ -96,12 +96,21 @@ int main(int argc, char **argv) {
   /* monitors system load using uptime() to set probability of IPFW's first
    * rule allowing any packet. This rule increases performance by sacrificing
    * complete security. The probability is dynamic based on the current load.
+   *
+   * ipfwd [rule_number] [static_prob]
+   *   rule_number : int, rule number to use for accept all rule. rules before
+   *                 this will always be run. defaults to 1
+   *
+   *   static_prob : int, always use this probability for accept all rule,
+   *                 ignore current system load. 0 denotes no static_prob,
+   *                 defaults to 0
    */
 
-  int status, i, num_cpus, rule_number;
+  int status, i, num_cpus, rule_number, static_prob;
   double slope, previous, prediction, error, probability;
   double loads[1], history[hist_size];
 
+  static_prob = 0;
   rule_number = 1;
   probability = 0.0;
   previous    = 100;
@@ -109,6 +118,8 @@ int main(int argc, char **argv) {
 
   if (argc > 1)
     rule_number = atoi(argv[1]);
+  if (argc > 2)
+    static_prob = atoi(argv[2]);
 
   control_ipfw(ENABLE);
 
@@ -131,7 +142,10 @@ int main(int argc, char **argv) {
         probability = sigmoid(history[0] / 100);
         previous    = history[0];
 
-        set_probability(rule_number, probability);
+        if (static_prob)
+          set_probability(rule_number, static_prob);
+        else
+          set_probability(rule_number, probability);
       }
 
       printf(
