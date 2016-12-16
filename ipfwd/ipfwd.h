@@ -1,3 +1,11 @@
+/* ipfwd.h
+ * author: Austin Voecks
+ *
+ * Monitors system load using uptime() to set probability of IPFW's first rule
+ * allowing any packet. This rule increases performance by sacrificing complete
+ * security. The probability is dynamic based on the current load.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>

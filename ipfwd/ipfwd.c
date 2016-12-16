@@ -1,12 +1,16 @@
+/* ipfwd.c 
+ * author: Austin Voecks
+ *
+ * Monitors system load using uptime() to set probability of IPFW's first rule
+ * allowing any packet. This rule increases performance by sacrificing complete
+ * security. The probability is dynamic based on the current load.
+ */
+
 #include "ipfwd.h"
 
 double sigmoid(double x) {
   /* push low values lower and high values higher
-
-     sigmoid(0.1) = 0.039
-     sigmoid(0.5) = 0.500
-     sigmoid(0.9) = 0.961
-     */
+   */
   if (x < 0.1) return 0;
   if (x > 0.9) return 1;
   return 1 / (1 + exp((x - 0.5) * -8));
@@ -14,7 +18,7 @@ double sigmoid(double x) {
 
 void control_ipfw(enum command cmd) {
   /* enables or disables ipfw
-  */
+   */
   int enabled, on = 1, off = 0;
   size_t size = sizeof(enabled);
 
@@ -41,7 +45,7 @@ void control_ipfw(enum command cmd) {
 
 void set_probability(double probability) {
   /* run the ipfw commands to set the new first rule probability
-     */
+   */
   int status;
   pid_t pid;
   char *rule_body = "-q add 1 prob 0.000 allow ip from any to any ";
