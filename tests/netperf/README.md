@@ -13,6 +13,7 @@ Tests are categorized by the systems they were run on
 > hw.machine: amd64  
 > hw.ncpu: 1  
 > hw.physmem: 502874112  
+> media: Ethernet 10Gbase-T <full-duplex>
 
 - wwu
 > FreeBSD 11.0-RELEASE-p1 #0 r306420: Thu Sep 29 01:43:23 UTC 2016  
@@ -20,6 +21,13 @@ Tests are categorized by the systems they were run on
 > hw.machine: amd64  
 > hw.ncpu: 8  
 > hw.physmem: 17101189120  
+> media: Ethernet autoselect (1000baseT <full-duplex>)
+
+```
+uname -orim
+sysctl hw.model hw.machine hw.ncpu hw.physmem
+ifconfig | grep media
+```
 
 ## server
 root@cf498-nel-01 ~# netserver
