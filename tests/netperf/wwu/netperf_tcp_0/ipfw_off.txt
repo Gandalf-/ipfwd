@@ -1,14 +1,4 @@
-freebsd@righty ~/i/r/tests# netperf -c -C -l 30 -H lefti.anardil.net -t TCP_STREAM -- -P 80
-MIGRATED TCP STREAM TEST from 0.0.0.0 (0.0.0.0) port 80 AF_INET to lefti.anardil.net () port 80 AF_INET : histogram : interval : dirty data : demo
-Recv   Send    Send                          Utilization       Service Demand
-Socket Socket  Message  Elapsed              Send     Recv     Send    Recv
-Size   Size    Size     Time     Throughput  local    remote   local   remote
-bytes  bytes   bytes    secs.    10^6bits/s  % C      % C      us/KB   us/KB
-
- 65536  32768  32768    60.01      1957.56   46.68    50.36    1.953   2.108  
-
-
-root@cf418-nel-02 ~/i/r/tests# netperf -c -C -l 30 -H cf498-nel-01 -t TCP_STREAM -- -P 80
+root@cf418-nel-02 ~# netperf -c -C -l 30 -H cf498-nel-01 -t TCP_STREAM -- -P 80
 MIGRATED TCP STREAM TEST from 0.0.0.0 (0.0.0.0) port 80 AF_INET to cf498-nel-01.cs.wwu.edu () port 80 AF_INET : histogram : interval : dirty data : demo
 Recv   Send    Send                          Utilization       Service Demand
 Socket Socket  Message  Elapsed              Send     Recv     Send    Recv
@@ -17,7 +7,7 @@ bytes  bytes   bytes    secs.    10^6bits/s  % C      % C      us/KB   us/KB
 
  65536  32768  32768    30.11       934.47   10.24    7.19     7.181   5.045
 
-root@cf418-nel-02 ~/i/r/t/netperf_tcp_0# netperf -c -C -l 30 -H cf498-nel-01 -t TCP_STREAM -- -P 80
+root@cf418-nel-02 ~# netperf -c -C -l 30 -H cf498-nel-01 -t TCP_STREAM -- -P 80
 MIGRATED TCP STREAM TEST from 0.0.0.0 (0.0.0.0) port 80 AF_INET to cf498-nel-01.cs.wwu.edu () port 80 AF_INET : histogram : interval : dirty data : demo
 Recv   Send    Send                          Utilization       Service Demand
 Socket Socket  Message  Elapsed              Send     Recv     Send    Recv

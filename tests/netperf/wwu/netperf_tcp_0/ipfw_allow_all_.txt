@@ -1,4 +1,4 @@
-root@cf418-nel-02 ~/i/r/tests# netperf -c -C -l 30 -H cf498-nel-01 -t TCP_STREAM -- -P 80
+root@cf418-nel-02 ~# netperf -c -C -l 30 -H cf498-nel-01 -t TCP_STREAM -- -P 80
 MIGRATED TCP STREAM TEST from 0.0.0.0 (0.0.0.0) port 80 AF_INET to
 cf498-nel-01.cs.wwu.edu () port 80 AF_INET : histogram : interval : dirty data
 : demo
