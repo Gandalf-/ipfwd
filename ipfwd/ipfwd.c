@@ -43,12 +43,12 @@ void control_ipfw(enum command cmd) {
   }
 }
 
-void set_probability(double probability) {
+void set_probability(int rule_number, double probability) {
   /* run the ipfw commands to set the new first rule probability
    */
   int status;
   pid_t pid;
-  char *rule_body = "-q add 1 prob 0.000 allow ip from any to any ";
+  char *rule_body = "-q add 00000 prob 0.000 allow ip from any to any ";
   char *set_rule_one;
 
   /* delete old rule */
@@ -69,7 +69,8 @@ void set_probability(double probability) {
       set_rule_one = malloc(sizeof(rule_body));
       snprintf(
           set_rule_one, strlen(rule_body),
-          "-q add 1 prob %0.3f allow ip from any to any", probability);
+          "-q add %d prob %0.3f allow ip from any to any", 
+          rule_number, probability);
 
       execl(ipfw_path, "ifpw", set_rule_one, NULL);
       exit(1); 
@@ -97,13 +98,18 @@ int main(int argc, char **argv) {
    * complete security. The probability is dynamic based on the current load.
    */
 
-  int status, i, num_cpus;
+  int status, i, num_cpus, rule_number;
   double slope, previous, prediction, error, probability;
   double loads[1], history[hist_size];
 
+  rule_number = 1;
   probability = 0.0;
   previous    = 100;
   num_cpus    = sysconf(_SC_NPROCESSORS_ONLN);
+
+  if (argc > 1)
+    rule_number = atoi(argv[1]);
+
   control_ipfw(ENABLE);
 
   while (1) {
@@ -124,7 +130,8 @@ int main(int argc, char **argv) {
       if (fabs(previous - history[0]) > sensitivity) {
         probability = sigmoid(history[0] / 100);
         previous    = history[0];
-        set_probability(probability);
+
+        set_probability(rule_number, probability);
       }
 
       printf(
