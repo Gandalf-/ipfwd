@@ -1,3 +1,10 @@
+/* loadgen.c 
+ * author: Austin Voecks
+ *
+ * Program that simluates CPU load by doing some math and then waiting for an
+ * empirically determined number of nanoseconds. 
+ */
+
 #include <math.h>
 #include <time.h>
 #include <stdio.h>
