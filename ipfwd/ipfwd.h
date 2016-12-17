@@ -12,6 +12,8 @@
 #include <string.h>
 #include <math.h>
 #include <time.h>
+#include <fcntl.h>
+#include <assert.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <sys/sysctl.h>
@@ -20,7 +22,7 @@
   if (! ret) { \
     fprintf(stderr, "error: %s\n", string); exit(1);}
 
-enum command {ENABLE, DISABLE};
+enum command {ENABLE, DISABLE, RESTART};
 
 const int sensitivity = 10;
 const int hist_size = 5;

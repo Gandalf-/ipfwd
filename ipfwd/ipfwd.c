@@ -19,7 +19,8 @@ double sigmoid(double x) {
 void control_ipfw(enum command cmd) {
   /* enables or disables ipfw
    */
-  int enabled, on = 1, off = 0;
+  pid_t pid;
+  int status, enabled, on = 1, off = 0;
   size_t size = sizeof(enabled);
 
   sysctlbyname(sysctl_ipfw_v4, &enabled, &size, NULL, 0);
@@ -40,6 +41,18 @@ void control_ipfw(enum command cmd) {
       }
       /* do nothing if already off */
       break;
+    
+    case RESTART:
+      if ((pid = fork()) == 0) {
+        dup2(open("/dev/null", O_WRONLY), 1);
+        execl(service_path, "service", "ipfw", "restart", NULL);
+        exit(1); 
+      }
+      else {
+        waitpid(pid, &status, 0);
+        check(!status, "failed to restart ipfw during ipfwd startup"); 
+      }
+      break;
   }
 }
 
@@ -48,12 +61,22 @@ void set_probability(int rule_number, double probability) {
    */
   int status;
   pid_t pid;
-  char *rule_body = "-q add 00000 prob 0.000 allow ip from any to any ";
-  char *set_rule_one;
+  char *rule_body     = "-q add       prob 0.000 allow ip from any to any ";
+  char *rule_body_fmt = "-q add %d prob %0.3f allow ip from any to any";
+  char *dele_body     = "-q delete      ";
+  char *dele_body_fmt = "-q delete %d";
+  char *set_rule, *del_rule;
 
   /* delete old rule */
   if ((pid = fork()) == 0) {
-    execl(ipfw_path, "ipfw", "-q delete 1", NULL);
+    del_rule = malloc(sizeof(dele_body));
+    snprintf(
+        del_rule, strlen(dele_body), dele_body_fmt, 
+        rule_number);
+
+    dup2(open("/dev/null", O_WRONLY), 1);
+    dup2(open("/dev/null", O_WRONLY), 2);
+    execl(ipfw_path, "ipfw", del_rule, NULL);
     exit(1); 
   }
   else {
@@ -66,13 +89,13 @@ void set_probability(int rule_number, double probability) {
     if (probability > 0) {
       control_ipfw(ENABLE);
 
-      set_rule_one = malloc(sizeof(rule_body));
+      set_rule = malloc(sizeof(rule_body));
       snprintf(
-          set_rule_one, strlen(rule_body),
-          "-q add %d prob %0.3f allow ip from any to any", 
+          set_rule, strlen(rule_body), rule_body_fmt, 
           rule_number, probability);
 
-      execl(ipfw_path, "ifpw", set_rule_one, NULL);
+      dup2(open("/dev/null", O_WRONLY), 1);
+      execl(ipfw_path, "ifpw", set_rule, NULL);
       exit(1); 
     }
     /* prob > 0.9 -> disable ipfw until load decreases */
@@ -97,21 +120,21 @@ int main(int argc, char **argv) {
    * rule allowing any packet. This rule increases performance by sacrificing
    * complete security. The probability is dynamic based on the current load.
    *
-   * ipfwd [rule_number] [static_prob]
+   * ipfwd [rule_number static_prob]
    *   rule_number : int, rule number to use for accept all rule. rules before
    *                 this will always be run. defaults to 1
    *
-   *   static_prob : int, always use this probability for accept all rule,
+   *   static_prob : double, always use this probability for accept all rule,
    *                 ignore current system load. 0 denotes no static_prob,
    *                 defaults to 0
    */
 
-  int status, i, num_cpus, rule_number, static_prob;
-  double slope, previous, prediction, error, probability;
+  int status, i, num_cpus, rule_number;
+  double slope, previous, prediction, error, probability, static_prob;
   double loads[1], history[hist_size];
 
-  static_prob = 0;
   rule_number = 1;
+  static_prob = 0.0;
   probability = 0.0;
   previous    = 100;
   num_cpus    = sysconf(_SC_NPROCESSORS_ONLN);
@@ -119,9 +142,13 @@ int main(int argc, char **argv) {
   if (argc > 1)
     rule_number = atoi(argv[1]);
   if (argc > 2)
-    static_prob = atoi(argv[2]);
+    static_prob = atof(argv[2]);
 
-  control_ipfw(ENABLE);
+  assert(rule_number > 0 && rule_number < 65535);
+  assert(static_prob >= 0.0 && static_prob <= 1.0);
+
+  printf("[ipfwd] starting\n");
+  control_ipfw(RESTART);
 
   while (1) {
     check(getloadavg(loads, 1), "could not get load average");
@@ -139,13 +166,13 @@ int main(int argc, char **argv) {
 
       /* update probability if load has changed enough */
       if (fabs(previous - history[0]) > sensitivity) {
-        probability = sigmoid(history[0] / 100);
-        previous    = history[0];
-
         if (static_prob)
-          set_probability(rule_number, static_prob);
+          probability = static_prob;
         else
-          set_probability(rule_number, probability);
+          probability = sigmoid(history[0] / 100);
+
+        previous    = history[0];
+        set_probability(rule_number, probability);
       }
 
       printf(
