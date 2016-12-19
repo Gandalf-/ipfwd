@@ -49,11 +49,15 @@ ifconfig | grep media
 Measures performance when IPFW is primarily filtering incoming packets
 
 ## SERVER
+```
 netserver -D
+```
 
 ## CLIENT
+```
 ipfwd 1 \<first rule acceptance probability\>
 netperf -l 30 -H SERVER -t TCP_STREAM --
+```
 
 ## directory naming convention
 \<protocol type\>_\<first rule acceptance probability\>
