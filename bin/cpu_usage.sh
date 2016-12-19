@@ -9,10 +9,12 @@ finish() {
 
 trap finish INT
 results=""
-pid=$(pgrep $1)
 
 while true; do
-  results="$results $(ps -p "$pid" -o '%cpu' | tail -n 1 | grep -o '[0-9\.]*')"
+  pid="$(pgrep $1 | head -n 1)"
+  if test "$pid" != ""; then
+    results="$results $(ps -p "$pid" -o '%cpu' | tail -n 1 | grep -o '[0-9\.]*')"
+  fi
   sleep 0.5
   echo -n "."
 done
