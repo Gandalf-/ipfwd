@@ -148,7 +148,7 @@ int main(int argc, char **argv) {
   assert(static_prob >= 0.0 && static_prob <= 1.0);
 
   printf("[ipfwd] starting\n");
-  control_ipfw(START);
+  control_ipfw(ENABLE);
 
   while (1) {
     check(getloadavg(loads, 1), "could not get load average");
