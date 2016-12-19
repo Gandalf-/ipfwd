@@ -23,28 +23,37 @@ Tests are categorized by the systems they were run on
 > hw.physmem: 17101189120  
 > media: Ethernet autoselect (1000baseT <full-duplex>)
 
+- isilon_10G
+> Isilon OneFS v8.1.0.DEV.0 amd64 IQ  
+> hw.model: Intel(R) Xeon(R) CPU D-1527 @ 2.20GHz  
+> hw.machine: amd64  
+> hw.ncpu: 8  
+> hw.physmem: 68543340544  
+> media: ???  
+
+- isilon_40G
+> Isilon OneFS v8.1.0.DEV.0 amd64 IQ  
+> hw.model: Intel(R) Xeon(R) CPU D-1527 @ 2.20GHz  
+> hw.machine: amd64  
+> hw.ncpu: 8  
+> hw.physmem: 68543340544  
+> media: Ethernet autoselect (40Gbase-CR4 \<full-duplex,rxpause,txpause\>)  
+
 ```
 uname -orim
 sysctl hw.model hw.machine hw.ncpu hw.physmem
 ifconfig | grep media
 ```
 
-## server
-root@cf498-nel-01 ~# netserver
+# incoming
+Measures performance when IPFW is primarily filtering incoming packets
 
-## client
-root@cf498-nel-02 ~# netperf -c -C -l 30 -H cf498-nel-01 -t TCP_STREAM -- -P 80
+## SERVER
+netserver -D
+
+## CLIENT
+ipfwd 1 \<first rule acceptance probability\>
+netperf -l 30 -H SERVER -t TCP_STREAM --
 
 ## directory naming convention
-netperf_\<protocol type\>_\<first rule acceptance probability\>
-
-## ipfw_on.txt
-denotes the results when the firewall was on using the rules in ipfw_rules.txt
-
-## ipfw_off.txt
-denotes the results when the firewall was disabled
-  `service ipfw stop`
-
-## ipfw_allow_all.txt
-denotes the results when the firewall is on, and the first rule is 
-  `ipfw -q add 1 prob 1.0 allow ip from any to any`
+\<protocol type\>_\<first rule acceptance probability\>
