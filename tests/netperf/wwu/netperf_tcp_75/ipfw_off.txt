@@ -1,7 +1,0 @@
-MIGRATED TCP STREAM TEST from 0.0.0.0 (0.0.0.0) port 80 AF_INET to lefti.anardil.net () port 80 AF_INET : histogram : interval : dirty data : demo
-Recv   Send    Send                          Utilization       Service Demand
-Socket Socket  Message  Elapsed              Send     Recv     Send    Recv
-Size   Size    Size     Time     Throughput  local    remote   local   remote
-bytes  bytes   bytes    secs.    10^6bits/s  % C      % C      us/KB   us/KB
-
- 65536  32768  32768    120.01     1974.92   45.94    99.55    1.906   4.129  
