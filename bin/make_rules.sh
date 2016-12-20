@@ -12,7 +12,7 @@ base=5000
 
 for i in $(seq "$1"); do
   num=$(( $i + $base ))
-  echo ipfw -q add "$num" deny ip from 127.255.0."$i" to any
+  ipfw -q add "$num" deny ip from 127.255.0."$i" to any
 done
 
 
