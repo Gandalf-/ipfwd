@@ -50,13 +50,15 @@ Measures performance when IPFW is primarily filtering incoming packets
 
 ## SERVER
 ```
+bash cpu_usage.sh netserver
 netserver -D
 ```
 
 ## CLIENT
 ```
-ipfwd 1 \<first rule acceptance probability\>
-netperf -l 30 -H SERVER -t TCP_STREAM --
+ipfwd 1 \<acceptance prob\>
+bash cpu_usage.sh netperf
+netperf -l 60 -H SERVER -t TCP_STREAM > tcp_\<acceptance prob\>/incoming.txt
 ```
 
 ## directory naming convention
