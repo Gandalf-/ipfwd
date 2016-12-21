@@ -138,6 +138,7 @@ int main(int argc, char **argv) {
   probability = 0.0;
   previous    = 100;
   num_cpus    = sysconf(_SC_NPROCESSORS_ONLN);
+printf("%d cpus\n", num_cpus);
 
   if (argc > 1)
     rule_number = atoi(argv[1]);
@@ -149,27 +150,34 @@ int main(int argc, char **argv) {
 
   printf("[ipfwd] starting\n");
   control_ipfw(ENABLE);
+  check(getloadavg(loads, 1), "could not get load average");
+  history[0] = loads[0];
 
   while (1) {
     check(getloadavg(loads, 1), "could not get load average");
+printf("%f\n", loads[0]);
 
     for (i = hist_size; i > 0; i--)
       history[i] = history[i - 1];
-    history[0] = loads[0] / num_cpus * 100;
-
+    history[0] = loads[0] * 100.0 / (double)num_cpus;
     error      = fabs((history[0] - prediction));
     slope      = history[0] - history[1];
     prediction = history[0] + slope;
+
+printf("history %f, error %f, slope %f, prediction %f\n", history[0], error, slope, prediction);
 
     /* only take action when this load is different than the previous one */
     if (slope) {
 
       /* update probability if load has changed enough */
       if (fabs(previous - history[0]) > sensitivity) {
-        if (static_prob)
+        if (static_prob == 0.0) {
           probability = static_prob;
-        else
+}
+        else {
+printf("non static\n");
           probability = sigmoid(history[0] / 100);
+}
 
         previous    = history[0];
         set_probability(rule_number, probability);
