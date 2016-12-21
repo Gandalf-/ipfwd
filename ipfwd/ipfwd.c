@@ -10,7 +10,7 @@
 
 double sigmoid(double x) {
   /* push low values lower and high values higher
-   */
+  */
   if (x < 0.1) return 0;
   if (x > 0.9) return 1;
   return 1 / (1 + exp((x - 0.5) * -8));
@@ -18,7 +18,7 @@ double sigmoid(double x) {
 
 void control_ipfw(enum command cmd) {
   /* enables or disables ipfw
-   */
+  */
   pid_t pid;
   int status, enabled, on = 1, off = 0;
   size_t size = sizeof(enabled);
@@ -41,7 +41,7 @@ void control_ipfw(enum command cmd) {
       }
       /* do nothing if already off */
       break;
-    
+
     case RESTART:
       if ((pid = fork()) == 0) {
         dup2(open("/dev/null", O_WRONLY), 1);
@@ -58,7 +58,7 @@ void control_ipfw(enum command cmd) {
 
 void set_probability(int rule_number, double probability) {
   /* run the ipfw commands to set the new first rule probability
-   */
+  */
   int status;
   pid_t pid;
   char *rule_body     = "-q add       prob 0.000 allow ip from any to any ";
@@ -120,7 +120,7 @@ int main(int argc, char **argv) {
    * rule allowing any packet. This rule increases performance by sacrificing
    * complete security. The probability is dynamic based on the current load.
    *
-   * ipfwd [rule_number static_prob]
+   * ipfwd [rule_number] [static_prob]
    *   rule_number : int, rule number to use for accept all rule. rules before
    *                 this will always be run. defaults to 1
    *
@@ -138,7 +138,6 @@ int main(int argc, char **argv) {
   probability = 0.0;
   previous    = 100;
   num_cpus    = sysconf(_SC_NPROCESSORS_ONLN);
-printf("%d cpus\n", num_cpus);
 
   if (argc > 1)
     rule_number = atoi(argv[1]);
@@ -150,34 +149,29 @@ printf("%d cpus\n", num_cpus);
 
   printf("[ipfwd] starting\n");
   control_ipfw(ENABLE);
-  check(getloadavg(loads, 1), "could not get load average");
-  history[0] = loads[0];
 
   while (1) {
     check(getloadavg(loads, 1), "could not get load average");
-printf("%f\n", loads[0]);
 
-    for (i = hist_size; i > 0; i--)
-      history[i] = history[i - 1];
     history[0] = loads[0] * 100.0 / (double)num_cpus;
     error      = fabs((history[0] - prediction));
     slope      = history[0] - history[1];
     prediction = history[0] + slope;
 
-printf("history %f, error %f, slope %f, prediction %f\n", history[0], error, slope, prediction);
+    for (i = hist_size; i > 0; i--)
+      history[i] = history[i - 1];
 
     /* only take action when this load is different than the previous one */
     if (slope) {
 
       /* update probability if load has changed enough */
       if (fabs(previous - history[0]) > sensitivity) {
-        if (static_prob == 0.0) {
+        if (static_prob > 0.0) {
           probability = static_prob;
-}
+        }
         else {
-printf("non static\n");
           probability = sigmoid(history[0] / 100);
-}
+        }
 
         previous    = history[0];
         set_probability(rule_number, probability);

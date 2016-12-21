@@ -5,7 +5,7 @@ allowing any packet. This rule increases performance by sacrificing complete
 security. The probability is dynamic based on the current load.
 
 ```
-ipfwd [rule_number static_prob]  
+ipfwd [rule_number] [static_prob]
   rule_number : int, rule number to use for accept all rule. rules before  
                 this will always be run. defaults to 1  
   
