@@ -16,5 +16,4 @@ while true; do
     results="$results $(ps -p "$pid" -o '%cpu' | tail -n 1 | grep -o '[0-9\.]*')"
   fi
   sleep 0.5
-  echo -n "."
 done

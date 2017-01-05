@@ -1,41 +1,55 @@
-# ipfwd
-IPFW Packet Sampling Project
+# IPFWD - IP Firewall Daemon
+##Probabilistic Policy Violation Detection with IPFWD
+  
+IPFWD is a system load monitoring daemon for FreeBSD that updates an early rule
+in IPFW that has a chance to accept any packet. This provides a graceful trade
+off between performance and security policy enforcement. The probability is
+dependent on the current system load. IFPWD also extends IPFW logs to include
+information about the probability of undetected rule violations caused by the
+accept any packet rule.
 
-Increase ipfw performance during high system load by reducing the percentage of
-packets inspected.
+###Abstract
 
-### what is the project?
-- add a monitoring daemon for IPFW that can reduce the proportion of incoming
-  and outgoing packets that have the full firewall rule set applied to them.
-  this allows the system to dynamically and gracefully trade-off between
-  policy enforcement and performance.
+By allowing a probabilistic chance for allowing any packet through the
+firewall, IPFWD can provide a graceful transition between performance and
+security that dynamically follows current system load. 
 
-- the goal is not to provide the same level of security at higher
-  performance. instead, we're allowing the system to trade between security
-  and performance
+Firewall performance can be improved by reducing the number of rules applied to
+each packet. Supposing a white list policy, the firewall has to apply every
+rule to each packet before it's denied. IPFWD is a daemon that monitors system
+load and updates a new first rule in IPFW that allows a percentage chance to
+allow any packet through.  
 
-- because not all the packets will have the firewall rules applied to them,
-  some could get through to internal services or contain malicious content
-  that the firewall would have normally prevented. however, as long as the
-  percentage is still above zero, we will have a change to detect, not
-  prevent, these kinds of violations.
+Instead of applying each rule to every denied packet, we have a chance to
+immediately accept any packet. Testing shows this improves performance. 
 
-- the mindset for this kind of firewall needs to be of detecting violations,
-  not preventing them. this is still valuable because it can tell you about
-  networking errors, attack vectors and vulnerabilities. in this scenario,
-  logging and inspection of logs is more important than a traditional
-  firewalled system. you can't assume that the firewall all dropped packet
-  types of a kind didn't get through and cause some kind of damage. what
-  you're gaining is the knowledge that these occurred without the cost of
-  inspecting every packet.
+IPFWD has the most potential for usefulness in high bandwidth environments,
+such as data centers, where it's not feasible to apply an extensive rule set to
+each packet but it is important to be notified of security policy violations.
+The balance between information and performance is self tuning based on current
+system load.
 
-- this kind of system makes sense in an environment where the network
-  throughput is higher than the available system resources required to apply
-  the full firewall policy to each packet. however, it could still be useful to
-  reduce the load imposed by the firewall, allowing other work can be done.
+Under normal load, IPFW will still fully enforce the security policy. But under
+heavy load, IPFWD will back IPFW off so performance isn't bottlenecked at the
+firewall.
 
-- it's based on the idea that network traffic that violates policies is likely
-  to occur again. for instance, a typical persistant threat beacons out to a
-  control center for commands. we might not catch every beacon, but we will
-  eventually, probabilistically catch one of them which will allow us to look
-  more closely into the problem.
+###IPFWD
+
+This is a shift in mindset from typical firewalls. Instead of enforcing every
+part of a security policy all of the time, IPFWD enforces the policy some of
+the time and extrapolates the violations it does encounter. This provides
+insight into the violations that weren't detected by IPFW. For this cost, you
+gain increased firewall performance and network throughput in resource bound
+systems. It's acceptable to allow a percentage of policy violations given that
+network traffic patterns are typically repeated.
+
+For example, under heavy load, IPFWD may allow 40% of packets through without
+applying the security policy. Supposing a port scan was initiated during this
+time, you system would still reject and report approximately 60% of the port
+scan. Since the percentage chance will fluctuate over time, IPFWD provides
+additional information in the IPFW logs to show the chance additional
+undetected violations occurred for detected violation.
+
+This also allows administrators to retain extensive rule sets that fully
+implement their security policy. Instead of having to simplifying rule sets to
+increase performance, IPFWD balances policy enforcement and performance itself.

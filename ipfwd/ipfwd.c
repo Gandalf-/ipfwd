@@ -134,18 +134,19 @@ int main(int argc, char **argv) {
   double loads[1], history[hist_size];
 
   rule_number = 1;
-  static_prob = 0.0;
+  static_prob = -1.0;
   probability = 0.0;
   previous    = 100;
   num_cpus    = sysconf(_SC_NPROCESSORS_ONLN);
 
-  if (argc > 1)
+  if (argc > 1) {
     rule_number = atoi(argv[1]);
-  if (argc > 2)
+    assert(rule_number > 0 && rule_number < 65535);
+  }
+  if (argc > 2) {
     static_prob = atof(argv[2]);
-
-  assert(rule_number > 0 && rule_number < 65535);
-  assert(static_prob >= 0.0 && static_prob <= 1.0);
+    assert(static_prob >= 0.0 && static_prob <= 1.0);
+  }
 
   printf("[ipfwd] starting\n");
   control_ipfw(ENABLE);
@@ -166,12 +167,10 @@ int main(int argc, char **argv) {
 
       /* update probability if load has changed enough */
       if (fabs(previous - history[0]) > sensitivity) {
-        if (static_prob > 0.0) {
+        if (static_prob != -1.0)
           probability = static_prob;
-        }
-        else {
+        else
           probability = sigmoid(history[0] / 100);
-        }
 
         previous    = history[0];
         set_probability(rule_number, probability);
