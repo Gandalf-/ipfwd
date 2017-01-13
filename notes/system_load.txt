@@ -1,3 +1,5 @@
+# vim: syntax=markdown:
+
 system load will need to be queried so that ipfw can dynamically update the
 percentage of packets that it's going to ignore
 

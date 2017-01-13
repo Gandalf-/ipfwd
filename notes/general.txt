@@ -1,3 +1,5 @@
+# vim: syntax=markdown:
+
 >>>
 general notes on the project
 <<<

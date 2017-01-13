@@ -1,3 +1,5 @@
+# vim: syntax=markdown:
+
 >>>
 notes on performance testing tools, techniques, and results
 <<<

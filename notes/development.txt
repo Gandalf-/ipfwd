@@ -1,3 +1,5 @@
+# vim: syntax=markdown:
+
 >>>
 notes on development work, design decisions and resources for working with the
 code base
