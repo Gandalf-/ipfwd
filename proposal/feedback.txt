@@ -1,0 +1,17 @@
+
+>This is a very interesting topic. I find that reading the document though,
+>is somewhat difficult. I agree with Benno about shortening some things as
+>this document essentially has three levels to it: (1) the intro, (2) the
+>abstract and (3) the description. Merge the intro and abstract into just
+>abstract. It also took be a little time to understand the intro until I
+>read further; more of a reason to do away with it.
+>
+>What I find especially interesting is how someone is going to trust a
+>firewall that takes chances as a tradeoff to performance. When you think
+>about it, you will allow an attack to occur as long as the performance is
+>kept up. I am assuming that the firewall initially starts in a learning
+>mode. I also wonder how one deals with an attack that you have never seen
+>before. Am I getting this all correctly?
+>
+>I look forward to having a local presentation of the work as I (99.99%
+>sure) will not be at BSDCan this year.
