@@ -1,0 +1,117 @@
+Outline
+  Abstract
+  Introduction
+  IPFW
+  IPFWD
+  Benchmarking Performance
+  Results
+  Security Implications
+  Related Work
+  Future Work
+  Conclusion
+  Acknowledgements
+  References
+
+
+Abstract
+
+  When using a firewall system like IPFW to detect threats, we can end up doing
+a lot of packet processing. This can negatively impact performance-sensitive
+systems such as storage nodes. This paper describes a practical solution to
+this problem using a load-weighted probabilistic mechanism that allows a
+trade-off between perfect visibility of incoming packets and reduced impact to
+system load.
+
+
+Introduction
+
+  IPFWD is a daemon for FreeBSD that updates an early rule in IPFW that has a
+chance to accept any packet. The probability of acceptance is updated over time
+and dependent on the current system load. To account for this, IPFWD extends
+IPFW logs to include the likelihood an undetected policy violation occurred.
+
+  This approach is based on the premise that firewall performance can be
+improved by reducing the number of rules applied to each packet. Supposing a
+whitelist policy, a firewall has to apply every rule to each packet before it's
+denied. With IPFWD, we have a chance to accept any packet early and skip any
+further computation. Test results shows this reduces the system resources
+required to handle the same amount of traffic. 
+
+  This is a shift in mindset from typical firewalls. Instead of enforcing every
+part of a security policy all the time, IPFWD enforces the policy some of the
+time and extrapolates from the violations it encounters. This provides insight
+into the violations that weren't detected. For this cost, you gain increased
+firewall performance and network throughput in resource bound systems. It's
+acceptable to allow a percentage of policy violations given that network
+traffic patterns are often repeated and the goal is detection and not immediate
+prevention. Preventative action may be taken later when resource requirements
+are lower.
+
+  As an example, under heavy load IPFWD may immediately accept 40% of packets.
+Supposing a port scan was initiated during this time and rules exist to block
+it, 60% of the port scan would still be rejected and logged. Since the
+probability will fluctuate over time, IPFWD provides information in the IPFW
+logs to show the chance undetected violations occurred for each detected
+violation. IPFWD allows administrators to keep extensive rule sets that fully
+implement their security policy. Instead of having to simplify rule sets to
+increase performance, IPFWD balances policy enforcement and performance
+automatically. Under normal or light load, IPFWD will enforce the entire
+security policy 100% of the time. 
+
+
+IPFW
+  - Why was this firewall chosen?
+  - First match wins rule system
+
+
+IPFWD
+  - What does it do?
+  - How does it work?
+    - Probabalistic packet matching
+    - Log extension
+  - Explain rationale for it acting as it does
+  - When should this system be used?
+    - High performance
+    - Resource conscious
+
+
+Security Implications
+  - Talk about security policy enforcement
+  - What does it mean for security if you're ignoring some of the packets?
+  - How do you trust this system?
+  - Talk about shift in mindset from "blocking attacks" to "detecting attacks"
+    - Why is this reasonable?
+    - Is this really different than traditional firewalls?
+
+
+Benchmarking Performance
+  - Explain different systems
+  - Explain tools
+  - Explain rationale for choosing tools
+
+
+Results
+  - Show results
+  - Difference in results between CPU and throughput bound systems
+
+
+Related Work
+  - Cisco and Juniper routers
+  - Machine learning firewalls
+
+
+Future Work
+  - Firewall rule reordering so we can "fail as early as possible"
+
+
+Conclusion
+  - What performance benefit do we get?
+  - What security cost is there?
+  - Why is this useful?
+  - Why is this important?
+
+
+Acknowledgements
+
+
+References
