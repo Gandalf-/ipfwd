@@ -66,6 +66,8 @@
 \documentclass[journal]{IEEEtran}
 \usepackage{blindtext}
 \usepackage{graphicx}
+\usepackage{array}
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 
 % Some very useful LaTeX packages include:
 % (uncomment the ones you want to load)
@@ -460,13 +462,38 @@ FreeBSD, IPFW, firewalls, performance.
 
 \section{Introduction}
 
-IPFWD is a daemon for FreeBSD that updates an early rule in IPFW that has a chance to accept any packet. The probability of acceptance is updated over time and dependent on the current system load. To account for this, IPFWD extends IPFW logs to include the likelihood an undetected policy violation occurred.
+IPFWD is a daemon for FreeBSD that updates an early rule in IPFW that has a
+chance to accept any packet. The probability of acceptance is updated over time
+and dependent on the current system load. To account for this, IPFWD extends
+IPFW logs to include the likelihood an undetected policy violation occurred.
 
-This approach is based on the premise that firewall performance can be improved by reducing the number of rules applied to each packet. Supposing a whitelist policy, a firewall has to apply every rule to each packet before it's denied. With IPFWD, we have a chance to accept any packet early and skip any further computation. Test results shows this reduces the system resources required to handle the same amount of traffic.
+This approach is based on the premise that firewall performance can be improved
+by reducing the number of rules applied to each packet. Supposing a whitelist
+policy, a firewall has to apply every rule to each packet before it's denied.
+With IPFWD, we have a chance to accept any packet early and skip any further
+computation. Test results shows this reduces the system resources required to
+handle the same amount of traffic.
 
-This is a shift in mindset from typical firewalls. Instead of enforcing every part of a security policy all the time, IPFWD enforces the policy some of the time and extrapolates from the violations it encounters. This provides insight into the violations that weren't detected. For this cost, you gain increased firewall performance and network throughput in resource bound systems. It's acceptable to allow a percentage of policy violations given that network traffic patterns are often repeated and the goal is detection and not immediate prevention. Preventative action may be taken later when resource requirements are lower.
+This is a shift in mindset from typical firewalls. Instead of enforcing every
+part of a security policy all the time, IPFWD enforces the policy some of the
+time and extrapolates from the violations it encounters. This provides insight
+into the violations that weren't detected. For this cost, you gain increased
+firewall performance and network throughput in resource bound systems. It's
+acceptable to allow a percentage of policy violations given that network
+traffic patterns are often repeated and the goal is detection and not immediate
+prevention. Preventative action may be taken later when resource requirements
+are lower.
 
-As an example, under heavy load IPFWD may immediately accept 40\% of packets. Supposing a port scan was initiated during this time and rules exist to block it, 60\% of the port scan would still be rejected and logged. Since the probability will fluctuate over time, IPFWD provides information in the IPFW logs to show the chance undetected violations occurred for each detected violation. IPFWD allows administrators to keep extensive rule sets that fully implement their security policy. Instead of having to simplify rule sets to increase performance, IPFWD balances policy enforcement and performance automatically. Under normal or light load, IPFWD will enforce the entire security policy 100\% of the time.
+As an example, under heavy load IPFWD may immediately accept 40\% of packets.
+Supposing a port scan was initiated during this time and rules exist to block
+it, 60\% of the port scan would still be rejected and logged. Since the
+probability will fluctuate over time, IPFWD provides information in the IPFW
+logs to show the chance undetected violations occurred for each detected
+violation. IPFWD allows administrators to keep extensive rule sets that fully
+implement their security policy. Instead of having to simplify rule sets to
+increase performance, IPFWD balances policy enforcement and performance
+automatically. Under normal or light load, IPFWD will enforce the entire
+security policy 100\% of the time.
 
 \section{IPFW}
 % Why was this firewall chosen?
@@ -499,9 +526,99 @@ As an example, under heavy load IPFWD may immediately accept 40\% of packets. Su
 
 \section{Benchmarking Performance}
 % Explain different systems
+Tests were run on three different systems and five different network cards.
+
+\begin{tabular}{ | l | L{19em} | } 
+ \hline
+ \multicolumn{2}{|c|}{Isilon OneFS 40Gb System} \\
+ \hline
+ \hline
+ OS  &  FreeBSD 11 Release \\
+ CPU &  8 x64 Intel\textsuperscript{\textregistered}\ Xeon\textsuperscript{\textregistered}\ CPU @ 2.20GHz \\
+ MEM &  64Gb \\
+ NIC &  Ethernet 40Gbase-T \\ 
+ \hline
+\end{tabular}\\\\
+
+\begin{tabular}{ | l | L{19em} | } 
+ \hline
+ \multicolumn{2}{|c|}{Isilon OneFS 10Gb System} \\
+ \hline
+ \hline
+ OS  &  FreeBSD 11 Release \\
+ CPU &  8 x64 Intel\textsuperscript{\textregistered}\ Xeon\textsuperscript{\textregistered}\ CPU @ 2.20GHz \\
+ MEM &  64Gb RAM \\
+ NIC &  Ethernet 10Gbase-T \\ 
+ \hline
+\end{tabular} \\\\
+
+\begin{tabular}{ | l | L{19em} | } 
+ \hline
+ \multicolumn{2}{|c|}{ WWU 10Gb System } \\
+ \hline
+ \hline
+ OS  &  FreeBSD 11 Release \\
+ CPU &  8 x64 Intel\textsuperscript{\textregistered}\ Core\texttrademark\ i7-2600 CPU @ 3.4GHz \\
+ MEM &  16Gb \\ 
+ NIC &  ??? \\ 
+ \hline
+\end{tabular} \\\\
+
+\begin{tabular}{ | l | L{19em} | } 
+ \hline
+ \multicolumn{2}{|c|}{ WWU 1Gb System } \\
+ \hline
+ \hline
+ OS  &  FreeBSD 11 Release \\
+ CPU &  8 x64 Intel\textsuperscript{\textregistered}\ Core\texttrademark\ i7-2600 CPU @ 3.4GHz \\
+ MEM &  16Gb \\
+ NIC &  Ethernet 1000baseT \\ 
+ \hline
+\end{tabular} \\\\
+
+\begin{tabular}{ | l | L{19em} | } 
+ \hline
+ \multicolumn{2}{|c|}{ Virtualized 10G System } \\
+ \hline
+ \hline
+ OS  &  FreeBSD 11 Release \\
+ CPU &  1 x64 Intel\textsuperscript{\textregistered}\ Xeon\textsuperscript{\textregistered}\ CPU @ 1.80GHz \\
+ MEM &  512Mb \\
+ NIC &  Ethernet 10Gbase-T \\ 
+ \hline
+\end{tabular} \\\\
+
+The systems tested all used 64bit FreeBSD 11 Release, with varying CPU type, CPU speed, RAM and network cards. Isilon and WWU systems were both physical hardware, while the Virtualized system was in a hypervisor environment.
+
+Virtualization makes it more difficult to have the same confidence in the results as with the physical machines. To account for this, tests on the Virtualized system were repeated additional times to account for the variability of the underlying physical hardware and contention between virtual machines.
+
+The WWU and Virtualized tests were conducted on stock FreeBSD 11 without additional network performance configuration applied. Isilon OneFS does contain additional network performance tuning and demonstrates the additional gains IPFWD can provide with careful FreeBSD 11 kernel configuration.
+
 % Explain tools
-% Explain rationale for choosing tools
-\blindtext
+Multiple network performance tools were explored but the final results were compiled using Netperf. Netperf was chosen because it was readily available on all test platforms, provides built-in CPU utilization measurement, and a wide range of test types.
+
+% Explain tests
+The test type UDP\_STREAM was chosen over TCP\_STREAM for simplicity and to preserve CPU cycles for IPFW. Raw network throughput and CPU performance is the target metric, which can be difficult to assess with TCP without performance tuning. (REFERENCE)
+
+All tests were conducted using the following steps:
+\begin{enumerate}
+    \item Machine 1
+    \begin{enumerate}
+        \item ipfw
+        \item netserver
+        \item CPU monitor
+    \end{enumerate}
+    \item Machine 2
+    \begin{enumerate}
+        \item ipfw
+        \item ipfwd
+        \item netperf
+        \item CPU monitor
+    \end{enumerate}
+\end{enumerate}
+
+All tests were run with minimal IPFW rule sets. Inituitively, larger
+production rule sets would benefit even further from IPFWD.
 
 
 \section{Results}
