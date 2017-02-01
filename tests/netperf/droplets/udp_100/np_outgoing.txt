@@ -1,0 +1,35 @@
+freebsd@lefty ~> netserver -D
+Starting netserver with host 'IN(6)ADDR_ANY' port '12865' and family AF_UNSPEC
+^C~freebsd@lefty ~>
+
+
+freebsd@righty ~/i/ipfwd> netperf -c -C -l 60 -t UDP_STREAM -H 10.138.160.119
+MIGRATED UDP STREAM TEST from 0.0.0.0 (0.0.0.0) port 0 AF_INET to 10.138.160.119 () port 0 AF_INET : histogram : interval : dirty data : demo
+Socket  Message  Elapsed      Messages                   CPU      Service
+Size    Size     Time         Okay Errors   Throughput   Util     Demand
+bytes   bytes    secs            #      #   10^6bits/sec % CC     us/KB
+
+  9216    9216   60.00     2165458 3866580     2660.9     100.00   3.079
+ 42080           60.00           0               0.0     48.27    1.486
+
+freebsd@righty ~/i/ipfwd>
+
+
+freebsd@righty ~/i/ipfwd> sudo ./ipfwd 1 1.0
+[ipfwd] starting
+current:  88.867%, error:  88.9%, probability:  1.000%
+current:  81.738%, error:  96.0%, probability:  1.000%
+current:  83.154%, error:  1.4%, probability:  1.000%
+current:  84.473%, error:  1.3%, probability:  1.000%
+current:  85.693%, error:  1.2%, probability:  1.000%
+current:  86.816%, error:  1.1%, probability:  1.000%
+current:  87.842%, error:  1.0%, probability:  1.000%
+current:  96.777%, error:  8.9%, probability:  1.000%
+current:  97.021%, error:  0.2%, probability:  1.000%
+current:  97.217%, error:  0.2%, probability:  1.000%
+current:  97.412%, error:  0.2%, probability:  1.000%
+current:  97.607%, error:  0.2%, probability:  1.000%
+current:  97.754%, error:  0.1%, probability:  1.000%
+current:  97.900%, error:  0.1%, probability:  1.000%
+current:  90.039%, error:  7.9%, probability:  1.000%
+^C~freebsd@righty ~/i/ipfwd>

@@ -1,0 +1,61 @@
+freebsd@lefty ~> netserver -D
+Starting netserver with host 'IN(6)ADDR_ANY' port '12865' and family AF_UNSPEC
+^C~freebsd@lefty ~>
+
+
+freebsd@lefty ~/i/ipfwd> ./ipfwd 1 0.0
+[ipfwd] starting
+current:  34.473%, error:  34.5%, probability:  0.000%
+current:  31.689%, error:  2.8%, probability:  0.000%
+current:  29.150%, error:  2.5%, probability:  0.000%
+current:  26.807%, error:  2.3%, probability:  0.000%
+current:  24.658%, error:  2.1%, probability:  0.000%
+current:  30.664%, error:  6.0%, probability:  0.000%
+current:  28.174%, error:  2.5%, probability:  0.000%
+current:  33.887%, error:  5.7%, probability:  0.000%
+current:  39.160%, error:  5.3%, probability:  0.000%
+current:  35.986%, error:  3.2%, probability:  0.000%
+current:  41.064%, error:  5.1%, probability:  0.000%
+current:  37.744%, error:  3.3%, probability:  0.000%
+current:  42.725%, error:  5.0%, probability:  0.000%
+current:  39.258%, error:  3.5%, probability:  0.000%
+current:  36.084%, error:  3.2%, probability:  0.000%
+^C~freebsd@lefty ~/i/ipfwd>
+
+
+freebsd@righty ~/i/ipfwd> netperf -l 60 -t UDP_STREAM -H 10.138.160.119
+MIGRATED UDP STREAM TEST from 0.0.0.0 (0.0.0.0) port 0 AF_INET to 10.138.160.119 () port 0 AF_INET : histogram : interval : dirty data : demo
+Socket  Message  Elapsed      Messages
+Size    Size     Time         Okay Errors   Throughput
+bytes   bytes    secs            #      #   10^6bits/sec
+
+  9216    9216   60.00     2461813 3219495    3025.03
+ 42080           60.00           0              0.00
+
+freebsd@righty ~/i/ipfwd>
+
+
+freebsd@righty ~/i/ipfwd> sudo ./ipfwd 1 1.0
+[ipfwd] starting
+current:  37.207%, error:  37.2%, probability:  1.000%
+current:  42.188%, error:  5.0%, probability:  1.000%
+current:  46.777%, error:  4.6%, probability:  1.000%
+current:  51.025%, error:  4.2%, probability:  1.000%
+current:  54.932%, error:  3.9%, probability:  1.000%
+current:  58.496%, error:  3.6%, probability:  1.000%
+current:  61.816%, error:  3.3%, probability:  1.000%
+current:  96.875%, error:  35.1%, probability:  1.000%
+current:  105.127%, error:  8.3%, probability:  1.000%
+current:  104.688%, error:  0.4%, probability:  1.000%
+current:  104.297%, error:  0.4%, probability:  1.000%
+current:  103.906%, error:  0.4%, probability:  1.000%
+current:  103.564%, error:  0.3%, probability:  1.000%
+current:  103.271%, error:  0.3%, probability:  1.000%
+^C~freebsd@righty ~/i/ipfwd>
+
+
+freebsd@righty ~/i/bin> bash cpu_usage.sh netperf
+^C
+11.6 16.2 19.1 23.7 26.0 30.4 32.0 36.6 37.7 42.4 43.1 47.6 47.8 52.3 52.2 56.7 56.0 60.6 59.6 64.2 62.9 61.1 65.8 63.8 68.5 66.5 71.1 68.8 73.4 71.0 75.5 72.8 77.5 74.7 79.3 76.5 80.9 77.8 82.2 79.2 83.7 80.5 84.9 81.6 86.1 82.8 87.4 84.0 88.6 85.1 89.8 86.1 82.4 87.0 83.1 87.9 84.0 88.5 84.7 89.2 85.4 89.9 85.9 90.4 86.5 91.0 87.1 91.6 87.8 92.3 88.3 92.8 88.7 93.2 89.1 93.5 89.4 93.8 89.8 94.3 90.3 86.1 90.8 86.7 91.3 87.191.7 87.7 92.2 88.1 92.6 88.5 92.8 88.7 93.3 89.2 93.8 89.6 94.1 89.9 94.3 90.2 94.5 90.4 94.9 90.8 95.2 91.2 95.7 91.4 87.2 91.9 87.7 92.3 83.3 83.3 74.7 74.7 67.0 67.0 60.3
+average: 77.486
+freebsd@righty ~/i/bin>
