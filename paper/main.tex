@@ -69,33 +69,6 @@
 \usepackage{array}
 \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 
-% Some very useful LaTeX packages include:
-% (uncomment the ones you want to load)
-
-
-% *** MISC UTILITY PACKAGES ***
-%
-%\usepackage{ifpdf}
-% Heiko Oberdiek's ifpdf.sty is very useful if you need conditional
-% compilation based on whether the output is pdf or dvi.
-% usage:
-% \ifpdf
-%   % pdf code
-% \else
-%   % dvi code
-% \fi
-% The latest version of ifpdf.sty can be obtained from:
-% http://www.ctan.org/tex-archive/macros/latex/contrib/oberdiek/
-% Also, note that IEEEtran.cls V1.7 and later provides a builtin
-% \ifCLASSINFOpdf conditional that works the same way.
-% When switching from latex to pdflatex and vice-versa, the compiler may
-% have to be run twice to clear warning/error messages.
-
-
-
-
-
-
 % *** CITATION PACKAGES ***
 %
 %\usepackage{cite}
@@ -113,9 +86,6 @@
 % The latest version can be obtained at:
 % http://www.ctan.org/tex-archive/macros/latex/contrib/cite/
 % The documentation is contained in the cite.sty file itself.
-
-
-
 
 
 
@@ -161,91 +131,6 @@
 
 
 
-
-
-% *** MATH PACKAGES ***
-%
-%\usepackage[cmex10]{amsmath}
-% A popular package from the American Mathematical Society that provides
-% many useful and powerful commands for dealing with mathematics. If using
-% it, be sure to load this package with the cmex10 option to ensure that
-% only type 1 fonts will utilized at all point sizes. Without this option,
-% it is possible that some math symbols, particularly those within
-% footnotes, will be rendered in bitmap form which will result in a
-% document that can not be IEEE Xplore compliant!
-%
-% Also, note that the amsmath package sets \interdisplaylinepenalty to 10000
-% thus preventing page breaks from occurring within multiline equations. Use:
-%\interdisplaylinepenalty=2500
-% after loading amsmath to restore such page breaks as IEEEtran.cls normally
-% does. amsmath.sty is already installed on most LaTeX systems. The latest
-% version and documentation can be obtained at:
-% http://www.ctan.org/tex-archive/macros/latex/required/amslatex/math/
-
-
-
-
-
-% *** SPECIALIZED LIST PACKAGES ***
-%
-%\usepackage{algorithmic}
-% algorithmic.sty was written by Peter Williams and Rogerio Brito.
-% This package provides an algorithmic environment fo describing algorithms.
-% You can use the algorithmic environment in-text or within a figure
-% environment to provide for a floating algorithm. Do NOT use the algorithm
-% floating environment provided by algorithm.sty (by the same authors) or
-% algorithm2e.sty (by Christophe Fiorio) as IEEE does not use dedicated
-% algorithm float types and packages that provide these will not provide
-% correct IEEE style captions. The latest version and documentation of
-% algorithmic.sty can be obtained at:
-% http://www.ctan.org/tex-archive/macros/latex/contrib/algorithms/
-% There is also a support site at:
-% http://algorithms.berlios.de/index.html
-% Also of interest may be the (relatively newer and more customizable)
-% algorithmicx.sty package by Szasz Janos:
-% http://www.ctan.org/tex-archive/macros/latex/contrib/algorithmicx/
-
-
-
-
-% *** ALIGNMENT PACKAGES ***
-%
-%\usepackage{array}
-% Frank Mittelbach's and David Carlisle's array.sty patches and improves
-% the standard LaTeX2e array and tabular environments to provide better
-% appearance and additional user controls. As the default LaTeX2e table
-% generation code is lacking to the point of almost being broken with
-% respect to the quality of the end results, all users are strongly
-% advised to use an enhanced (at the very least that provided by array.sty)
-% set of table tools. array.sty is already installed on most systems. The
-% latest version and documentation can be obtained at:
-% http://www.ctan.org/tex-archive/macros/latex/required/tools/
-
-
-%\usepackage{mdwmath}
-%\usepackage{mdwtab}
-% Also highly recommended is Mark Wooding's extremely powerful MDW tools,
-% especially mdwmath.sty and mdwtab.sty which are used to format equations
-% and tables, respectively. The MDWtools set is already installed on most
-% LaTeX systems. The lastest version and documentation is available at:
-% http://www.ctan.org/tex-archive/macros/latex/contrib/mdwtools/
-
-
-% IEEEtran contains the IEEEeqnarray family of commands that can be used to
-% generate multiline equations as well as matrices, tables, etc., of high
-% quality.
-
-
-%\usepackage{eqparbox}
-% Also of notable interest is Scott Pakin's eqparbox package for creating
-% (automatically sized) equal width boxes - aka "natural width parboxes".
-% Available at:
-% http://www.ctan.org/tex-archive/macros/latex/contrib/eqparbox/
-
-
-
-
-
 % *** SUBFIGURE PACKAGES ***
 %\usepackage[tight,footnotesize]{subfigure}
 % subfigure.sty was written by Steven Douglas Cochran. This package makes it
@@ -256,8 +141,6 @@
 % be obtained at:
 % http://www.ctan.org/tex-archive/obsolete/macros/latex/contrib/subfigure/
 % subfigure.sty has been superceeded by subfig.sty.
-
-
 
 %\usepackage[caption=false]{caption}
 %\usepackage[font=footnotesize]{subfig}
@@ -276,8 +159,6 @@
 % http://www.ctan.org/tex-archive/macros/latex/contrib/subfig/
 % The latest version and documentation of caption.sty can be obtained at:
 % http://www.ctan.org/tex-archive/macros/latex/contrib/caption/
-
-
 
 
 % *** FLOAT PACKAGES ***
@@ -357,30 +238,6 @@
 % page by themselves.
 
 
-
-
-
-% *** PDF, URL AND HYPERLINK PACKAGES ***
-%
-%\usepackage{url}
-% url.sty was written by Donald Arseneau. It provides better support for
-% handling and breaking URLs. url.sty is already installed on most LaTeX
-% systems. The latest version can be obtained at:
-% http://www.ctan.org/tex-archive/macros/latex/contrib/misc/
-% Read the url.sty source comments for usage information. Basically,
-% \url{my_url_here}.
-
-
-
-
-
-% *** Do not adjust lengths that control margins, column widths, etc. ***
-% *** Do not use packages that alter fonts (such as pslatex).         ***
-% There should be no need to do such things with IEEEtran.cls V1.6 and later.
-% (Unless specifically asked to do so by the journal or conference you plan
-% to submit to, of course. )
-
-
 % correct bad hyphenation here
 \hyphenation{op-tical net-works semi-conduc-tor}
 
@@ -390,38 +247,9 @@
 % paper title
 % can use linebreaks \\ within to get better formatting as desired
 \title{Probabilistic Policy Violation Detection with IPFWD}
-%
-%
-% author names and IEEE memberships
-% note positions of commas and nonbreaking spaces ( ~ ) LaTeX will not break
-% a structure at a ~ so this keeps an author's name from being broken across
-% two lines.
-% use \thanks{} to gain access to the first footnote area
-% a separate \thanks must be used for each paragraph as LaTeX2e's \thanks
-% was not built to handle multiple paragraphs
-%
 
 \author{Dr. Phil Nelson and Austin Voecks% <-this % stops a space
-\thanks{placeholder}}
-
-% note the % following the last \IEEEmembership and also \thanks - 
-% these prevent an unwanted space from occurring between the last author name
-% and the end of the author line. i.e., if you had this:
-% 
-% \author{....lastname \thanks{...} \thanks{...} }
-%                     ^------------^------------^----Do not want these spaces!
-%
-% a space would be appended to the last name and could cause every name on that
-% line to be shifted left slightly. This is one of those "LaTeX things". For
-% instance, "\textbf{A} \textbf{B}" will typeset as "A B" not "AB". To get
-% "AB" then you have to do: "\textbf{A}\textbf{B}"
-% \thanks is no different in this regard, so shield the last } of each \thanks
-% that ends a line with a % and do not let a space in before the next \thanks.
-% Spaces after \IEEEmembership other than the last one are OK (and needed) as
-% you are supposed to have spaces between the names. For what it is worth,
-% this is a minor point as most people would not even notice if the said evil
-% space somehow managed to creep in.
-
+\thanks{Dell EMC Isilon}}
 
 
 % The paper headers
@@ -435,13 +263,22 @@
 % You can use \ifCLASSOPTIONpeerreview for conditional compilation here if
 % you desire.
 
+
 % make the title area
 \maketitle
 
+
 \begin{abstract}
 %\boldmath
-When using a firewall system like IPFW to detect threats, we can end up doing a lot of packet processing. This can negatively impact performance-sensitive systems such as storage nodes. This paper describes a practical solution to this problem using a load-weighted probabilistic mechanism that allows a trade-off between perfect visibility of incoming packets and reduced impact to system load.
+When using a firewall system like IPFW to detect threats, we can end up doing a
+lot of packet processing. This can negatively impact performance-sensitive
+systems such as storage nodes. This paper describes a practical solution to
+this problem using a load-weighted probabilistic mechanism that allows a
+trade-off between perfect visibility of incoming packets and reduced impact to
+system load.  
+
 \end{abstract}
+
 
 % Note that keywords are not normally used for peerreview papers.
 \begin{IEEEkeywords}
@@ -496,18 +333,60 @@ automatically. Under normal or light load, IPFWD will enforce the entire
 security policy 100\% of the time.
 
 \section{IPFW}
+
+% Firewall basics
+Firewalls restrict the types of incoming and outgoing network traffic according
+to a security policy. Without a security policy, administrators cannot know
+what to allow and disallow. Typical firewalls enforce this policy by blocking
+packets that do not match the rules. Whitelist firewalls default action is to
+block all traffic, additional rules describe exceptions. Blacklist firewalls
+are the opposite in that by default they accept all traffic and additional
+rules describe packet types that are not allowed. Since predicting and
+blacklisting all possible attacks is infeasible, whitelist firewall rulesets
+are the accepted standard and the focus of this paper.
+
 % Why was this firewall chosen?
-% First match wins rule system
-% Built in probabilistic match
-\blindtext
+IPFW is a stateful firewall written for FreeBSD which supports both IPv4 and
+IPv6. It is comprised of several components: a kernel firewall filter rule
+processor and its integrated packet accounting facility, the logging facility,
+NAT, the dummynet traffic shaper, a forward facility, a bridge facility, and
+an ipstealth facility.
+
+IPFW was chosen for it's close integration with the FreeBSD operating system,
+in kernel packet filter, and general performance. Performance is dependent on
+system parameters and circumstances, but IPFW outperforms PF in stateful packet
+filtering. Stateful rules are more powerful and flexible than stateless rules,
+were no session information is maintained. Additionally, the capabilities of
+IPFW extend beyond packet filtering into source based routing, traffic shaping
+and more. 
+
+% First match wins rule system and probabilistic matching
+Firewall rules are treated by IPFW in a first-match-wins fashion. IPFW also
+contains built-in functionality and rule syntax for probabilistic packet
+matching. From the documentation, this feature was intended for load balancing
+and other traffic shaping tasks. However it's the core of IPFWD's operation. 
+
+This paper is not meant as a comparison between IPFW and PF; the functionality
+provided by IPFWD could be ported to PF and serves as a proof of concept for
+firewalls in general.
 
 
 \section{IPFWD}
+
 % What does it do?
+IPFWD increases firewall performance by reducing the average amount of work it
+takes to process a packet. Depending on the current system load, IPFWD
+increases or decreases the chance the IPFW will immediately accept a given
+packet. It does this by claiming and maintaining an early rule in the IPFW rule
+set of the following form: 'prob 0.000 allow ip from any to any'. 
+
 % How does it work?
 % - Probabilistic packet matching
 % - Log extension
+
+
 % Explain rationale for it acting as it does
+
 % When should this system be used?
 % - High performance
 % - Resource conscious
@@ -515,9 +394,13 @@ security policy 100\% of the time.
 
 
 \section{Security Implications}
+
 % Talk about security policy enforcement
+
 % What does it mean for security if your ignoring some of the packet?
+
 % How do you trust this system?
+
 % Talk about shift in mindset from "blocking attacks" to "detecting attacks"
 % - Why is this reasonable?
 % - Is this really different than traditional firewalls?
@@ -525,9 +408,11 @@ security policy 100\% of the time.
 
 
 \section{Benchmarking Performance}
+
 % Explain different systems
 Tests were run on three different systems and five different network cards.
 
+% Isilon 40G
 \begin{tabular}{ | l | L{19em} | } 
  \hline
  \multicolumn{2}{|c|}{Isilon OneFS 40Gb System} \\
@@ -540,6 +425,7 @@ Tests were run on three different systems and five different network cards.
  \hline
 \end{tabular}\\\\
 
+% Isilon 10G
 \begin{tabular}{ | l | L{19em} | } 
  \hline
  \multicolumn{2}{|c|}{Isilon OneFS 10Gb System} \\
@@ -552,6 +438,7 @@ Tests were run on three different systems and five different network cards.
  \hline
 \end{tabular} \\\\
 
+% WWU 10G
 \begin{tabular}{ | l | L{19em} | } 
  \hline
  \multicolumn{2}{|c|}{ WWU 10Gb System } \\
@@ -564,6 +451,7 @@ Tests were run on three different systems and five different network cards.
  \hline
 \end{tabular} \\\\
 
+% WWU 1G
 \begin{tabular}{ | l | L{19em} | } 
  \hline
  \multicolumn{2}{|c|}{ WWU 1Gb System } \\
@@ -576,6 +464,7 @@ Tests were run on three different systems and five different network cards.
  \hline
 \end{tabular} \\\\
 
+% Virtualized 10G
 \begin{tabular}{ | l | L{19em} | } 
  \hline
  \multicolumn{2}{|c|}{ Virtualized 10G System } \\
@@ -588,18 +477,39 @@ Tests were run on three different systems and five different network cards.
  \hline
 \end{tabular} \\\\
 
-The systems tested all used 64bit FreeBSD 11 Release, with varying CPU type, CPU speed, RAM and network cards. Isilon and WWU systems were both physical hardware, while the Virtualized system was in a hypervisor environment.
+The systems tested all used 64bit FreeBSD 11 Release, with varying CPU type,
+CPU speed, RAM and network cards. Isilon and WWU systems were both physical
+hardware, while the Virtualized system was in a hypervisor environment hosted
+by a third party service.
 
-Virtualization makes it more difficult to have the same confidence in the results as with the physical machines. To account for this, tests on the Virtualized system were repeated additional times to account for the variability of the underlying physical hardware and contention between virtual machines.
+Virtualization makes it more difficult to have the same confidence in the
+results as with the physical machines. Tests on the Virtualized system were
+repeated additional times to account for the variability of the underlying
+physical hardware and contention between virtual machines.
 
-The WWU and Virtualized tests were conducted on stock FreeBSD 11 without additional network performance configuration applied. Isilon OneFS does contain additional network performance tuning and demonstrates the additional gains IPFWD can provide with careful FreeBSD 11 kernel configuration.
+The WWU and Virtualized tests were conducted on stock FreeBSD 11 without
+additional network performance configuration applied. Isilon OneFS does contain
+additional network performance tuning and demonstrates the additional gains
+IPFWD can provide with careful FreeBSD 11 kernel configuration.
 
+
+\subsection{Netperf}
 % Explain tools
-Multiple network performance tools were explored but the final results were compiled using Netperf. Netperf was chosen because it was readily available on all test platforms, provides built-in CPU utilization measurement, and a wide range of test types.
+Multiple network performance tools were explored but the final results were
+compiled using Netperf. Netperf was chosen because it was readily available on
+all test platforms, provides built-in CPU utilization measurement, and a wide
+range of test types.
 
 % Explain tests
-The test type UDP\_STREAM was chosen over TCP\_STREAM for simplicity and to preserve CPU cycles for IPFW. Raw network throughput and CPU performance is the target metric, which can be difficult to assess with TCP without performance tuning. (REFERENCE)
+The test type UDP\_STREAM was chosen over TCP\_STREAM for simplicity and to
+preserve CPU cycles for IPFW. Raw network throughput and CPU performance is the
+target metric, which can be difficult to assess with TCP. (REFERENCE)
 
+Netperf is single threaded, which allows easier comparison of results between
+systems with different numbers of cores. Additionally, all tests were run while
+the system was idle to minimize contention over system resources. 
+
+% Experimental method
 All tests were conducted using the following steps:
 \begin{enumerate}
     \item Machine 1
@@ -617,32 +527,64 @@ All tests were conducted using the following steps:
     \end{enumerate}
 \end{enumerate}
 
-All tests were run with minimal IPFW rule sets. Inituitively, larger
-production rule sets would benefit even further from IPFWD.
+All tests were run with minimal IPFW rule sets in a range of 30 to 60 rules.
+Intuitively, larger production rule sets would benefit even further from IPFWD.
 
+CPU utilization measurement is the most difficult parameter to measure in these
+tests. There are many factors that can account for variability between tests
+and jitter in the results.
 
 \section{Results}
-% Show results
-% Difference in results between CPU and throughput bound systems
-\blindtext
 
+% Show results
+
+
+% Difference in results between CPU and throughput bound systems
+\subsection{Discussion} 
+
+All the systems tested can be broadly categorized into two groups: CPU bound
+and NIC throughput bound. We can see that IPFWD affects performance positively
+but differently for both types. 
+
+In CPU bound systems, IPFWD reduces the number of cycles it takes to process
+each packet, allowing more packets to be processed in the same time and
+increasing throughput. This is shown most clearly in the Virtualized system
+tests, which have the weakest CPU but 10Gb Ethernet NICs. This finding is also
+apparent in the 40Gb Isilon system.
+
+In NIC throughput bound systems, reducing the number of CPU cycles to process
+packets will not increase throughput. However, IPFWD still reduces CPU load
+which allows more cycles to be dedicated to other system processes.
 
 \section{Related Work}
 % Cisco and Juniper routers
+
+Firewall decision trees? (Complete Redundancy Detection)
+
 % Machine learning firewalls
 \blindtext
 
 
 \section{Future Work}
 % Firewall rule reordering so we can "fail as early as possible"
-\blindtext
+Ideally, a whitelist firewall's rule set would be constructed so that the most
+commonly applied matches are reached earlier rather than later. IPFWD
+accomplishes this task by artificial early stopping. Firewall rule reordering
+is a could be another solution to this problem. Given logs of common network
+traffic for the system, statistical analysis could show which rules are matched
+more often than others. With this information, the rule set could be reordered
+so that the most commonly applied rules are earliest.
 
 
 \section{Conclusion}
 % What performance benefit do we get?
+
 % What security cost is there?
+
 % Why is this useful?
+
 % Why is this important?
+
 \blindtext
 
 

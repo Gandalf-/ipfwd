@@ -1,0 +1,31 @@
+root@cf418-nel-02 ~/ipfwd# netperf -c -C -l 30 -H cf498-nel-01 -t UDP_STREAM
+MIGRATED UDP STREAM TEST from 0.0.0.0 (0.0.0.0) port 0 AF_INET to cf498-nel-01.cs.wwu.edu () port 0 AF_INET : histogram : interval : dirty data : demo
+Socket  Message  Elapsed      Messages                   CPU      Service
+Size    Size     Time         Okay Errors   Throughput   Util     Demand
+bytes   bytes    secs            #      #   10^6bits/sec % CC     us/KB
+
+  9216    9216   30.02      386372 6324916      948.9     13.18    9.102
+ 42080           30.02           0               0.0     2.49     1.718
+
+root@cf418-nel-02 ~/ipfwd#
+
+
+root@cf418-nel-02 ~/i/ipfwd# ./ipfwd 1 0.5
+[ipfwd] starting
+current:  1.239%, error:  1.2%, probability:  0.500%
+current:  2.136%, error:  0.9%, probability:  0.500%
+current:  2.960%, error:  0.8%, probability:  0.500%
+current:  3.723%, error:  0.8%, probability:  0.500%
+current:  4.425%, error:  0.7%, probability:  0.500%
+current:  5.066%, error:  0.6%, probability:  0.500%
+current:  5.658%, error:  0.6%, probability:  0.500%
+current:  5.200%, error:  0.5%, probability:  0.500%
+current:  4.779%, error:  0.4%, probability:  0.500%
+current:  4.395%, error:  0.4%, probability:  0.500%
+current:  4.041%, error:  0.4%, probability:  0.500%
+current:  3.711%, error:  0.3%, probability:  0.500%
+current:  3.412%, error:  0.3%, probability:  0.500%
+current:  3.137%, error:  0.3%, probability:  0.500%
+current:  2.881%, error:  0.3%, probability:  0.500%
+current:  2.649%, error:  0.2%, probability:  0.500%
+^C~root@cf418-nel-02 ~/i/ipfwd#
