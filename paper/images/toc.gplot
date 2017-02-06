@@ -1,25 +1,37 @@
-set term png
+set terminal pngcairo dashed
+
+set linetype 1 lc rgb 'black'
+set linetype 2 lc rgb '#555555'
+set linetype 3 lc rgb '#999999'
 
 set xlabel 'IPFWD Acceptance Probability'
 set ylabel 'Throughput/CPU'
 fname = "toc.dat"
 
+f(x) = m*x + b
+fit f(x) fname using 1:2 via m,b
+title_f(a,b) = sprintf('LinReg(x) = %.3fx + %.0f', a, b)
+
 set title 'Isilon 40G: Throughput/CPU'
 set yrange [120:150]
 set output 'toc_isilon40.png'
-plot fname using 1:2 title 'Isilon 40G' with lines
+fit f(x) fname using 1:2 via m,b
+plot fname using 1:2 title 'Isilon 40G' with lines, f(x) title title_f(m,b)
 
 set title 'Isilon 10G: Throughput/CPU'
 set yrange [120:150]
 set output 'toc_isilon10.png'
-plot fname using 1:3 title 'Isilon 10G' with lines
+fit f(x) fname using 1:3 via m,b
+plot fname using 1:3 title 'Isilon 10G' with lines, f(x) title title_f(m,b)
 
 set title 'WWU 1G: Throughput/CPU'
 set yrange [50:100]
 set output 'toc_wwu1.png'
-plot fname using 1:4 title 'WWU 1G' with lines
+fit f(x) fname using 1:4 via m,b
+plot fname using 1:4 title 'WWU 1G' with lines, f(x) title title_f(m,b)
 
 set title 'Virtualized 10G: Throughput/CPU'
 set yrange [20:40]
 set output 'toc_virtual10.png'
-plot fname using 1:6 title 'Virtualized 10G' with lines
+fit f(x) fname using 1:6 via m,b
+plot fname using 1:6 title 'Virtualized 10G' with lines, f(x) title title_f(m,b)

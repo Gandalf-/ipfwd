@@ -4,25 +4,26 @@ fname = "cpu.dat"
 set xlabel 'IPFWD Acceptance Probability'
 set ylabel 'Throughput/CPU'
 
-set style line 1 lw 5 lt 1
-set style line 2 lw 5 lt 2
+set linetype 1 lc rgb 'black'
+set linetype 2 lc rgb '#555555'
+set linetype 3 lc rgb '#999999'
 
 set ytics nomirror
-set ylabel 'Througput Mb/Sec' tc lt 1
+set ylabel 'Througput Mb/Sec'
 
 set y2tics nomirror
-set y2label 'CPU Utilization %' tc lt 2
+set y2label 'CPU Utilization %'
 set y2range [0:100]
 
 set title 'Isilon 40G: Throughput vs CPU'
-set output 'isilon40_cpu.png'
+set output 'cpu_isilon40.png'
 set yrange [:10000]
 plot \
   fname using 1:2 title 'Throughput' with lines, \
   fname using 1:3 title 'CPU Utilization' with lines axes x1y2, \
 
 set title 'Isilon 10G: Throughput vs CPU'
-set output 'isilon10_cpu.png'
+set output 'cpu_isilon10.png'
 set yrange [:10000]
 plot \
   fname using 1:4 title 'Throughput' with lines, \
@@ -31,7 +32,7 @@ plot \
 # good example of when not to use this system
 set yrange [:1000]
 set title 'WWU 1G: Throughput vs CPU'
-set output 'wwu1_cpu.png'
+set output 'cpu_wwu1.png'
 plot \
   fname using 1:6 title 'Throughput' with lines, \
   fname using 1:7 title 'CPU Utilization' with lines axes x1y2, \
@@ -39,7 +40,7 @@ plot \
 set yrange [:3500]
 set y2range [:120]
 set title 'Virtualized 1G: Throughput vs CPU'
-set output 'virtual10_cpu.png'
+set output 'cpu_virtual10.png'
 plot \
   fname using 1:8 title 'Throughput' with lines, \
   fname using 1:9 title 'CPU Utilization' with lines axes x1y2, \

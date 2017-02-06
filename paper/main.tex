@@ -250,7 +250,7 @@
 \title{Probabilistic Policy Violation Detection with IPFWD}
 
 \author{Dr. Phil Nelson and Austin Voecks% <-this % stops a space
-\thanks{Dell EMC Isilon}}
+\thanks{In collaboration with Dell EMC Isilon}}
 
 
 % The paper headers
@@ -378,20 +378,98 @@ firewalls in general.
 IPFWD increases firewall performance by reducing the average amount of work it
 takes to process a packet. Depending on the current system load, IPFWD
 increases or decreases the chance the IPFW will immediately accept a given
-packet. It does this by claiming and maintaining an early rule in the IPFW rule
-set of the following form: 'prob 0.000 allow ip from any to any'. 
+packet. It does this by adding and maintaining an early rule in the IPFW rule
+set of the following form: \verb|prob 0.000 allow ip from any to any|. 
 
 % How does it work?
 % - Probabilistic packet matching
+Since IPFW uses a first-match-wins rule system, this early rule will be
+encountered before the majority of the other rules in the rule set.  The
+probability given in this rule determines the chance that we skip processing
+all further rules, supposing that there hasn't been a match already.  
+
+This is especially valuable for a whitelist firewall rule set dealing with
+large amounts of rejected traffic; normally each rejected packet has all rules
+applied to it while IPFW looks for a match.  When no matches are encountered,
+the default rule is employed and the packet is rejected. 
+
+In a typical data center environment the vast majority of network traffic is
+valid and going to be accepted eventually. However, these rule sets are often
+complex and take increasing time to match a given packet depending on the
+length. For a rule set of length $n$, we can expect to a packet to encounter
+$n/2$ failed matches before matching the correct rule and being accepted.
+
+IPFWD improves the average number of failed matches before successful match
+from
+
+\[
+\frac{n}{2}
+\]
+
+to
+
+\[
+\Big(k \cdot \mathsf{P}(\textit{EA})\Big) + 
+\Big(\frac{n}{2} \cdot \mathsf{P}(\neg{\textit{EA}})\Big) 
+\]
+
+where $k$ is number of rules before the early acceptance rule and
+$\mathsf{P}(\textit{EA})$ is the probability that the early acceptance rule is
+matched.
+
+Removing the constant $k$, IPFWD reduces the number of failed matches before a
+successful match by a factor of
+
+\[
+\frac
+    {\frac{n}{2}}
+    {\frac{n}{2} \cdot \mathsf{P}(\neg{\textit{EA}})} 
+= \frac{1}{\mathsf{P}(\neg{\textit{EA})}}.
+\]
+
 % - Log extension
+However, while this method increases the speed the system processes packets, it
+creates a chance that packets that would have normally been rejected will get
+through the firewall. We'll refer to these types of packets as invald.
 
-
-% Explain rationale for it acting as it does
+To account for this, IPFWD extends the IPFW system logs to include information
+about the early accpetance probability. From this information, administrators
+can extrapolate the probability that additional invalid packets made it through
+the firewall for each that is detected. This is discussed further in the
+Security Implications section.
 
 % When should this system be used?
-% - High performance
-% - Resource conscious
-\blindtext
+IPFWD is not intended to be used on all types of systems. It's application
+instead most directly benefits the following types of systems:
+
+\begin{enumerate}
+    \item \textbf{High Network Performance}\\
+      The gains provided by IPFWD are only apparent in systems were network
+      throughput is matched by or out performs CPU speed. Systems that can
+      already easily handle fully processing each packet will not benefit by
+      reducing processing time. Given modern CPU clock speeds, systems with
+      network cards slower than 1 Gb/sec will likely not benefit either.
+
+    \item \textbf{Resource Conscious}\\
+      In line with high performance systems, systems with strict resource
+      restrictions can benefit by the reduced network related CPU usage.
+
+    \item \textbf{Complex Firewall Requirements}\\
+      IPFWD works by reducing the average number of rules that fail to match
+      before a packet is finished being processed. Very simple rulesets will
+      gain little from reducing the number of rules applied to each packet.
+
+    \item \textbf{Detection Based Security Policy}\\ 
+      By using IPFWD, administrators sacrifice the assurance that every invalid
+      packet will be rejected.  However, they are still provided information as
+      to whether some invalid packets were rejected, and that information can
+      be used to infer the existance of additional invalid packets. 
+
+\end{enumerate}
+
+% Explain rationale for it acting as it does
+IPFWD is based on the assumptions that the majority of network traffic is
+valid, malicious events are rare, and 
 
 
 \section{Security Implications}
@@ -405,7 +483,6 @@ set of the following form: 'prob 0.000 allow ip from any to any'.
 % Talk about shift in mindset from "blocking attacks" to "detecting attacks"
 % - Why is this reasonable?
 % - Is this really different than traditional firewalls?
-\blindtext
 
 
 \section{Benchmarking Performance}
@@ -563,7 +640,6 @@ IPFWD can provide with careful FreeBSD 11 kernel configuration.
 
 % Show results graphs, explain axises, etc
 \section{Results}
-
   
   % throughput/CPU
   \subsection{Throughput / CPU}
@@ -581,10 +657,10 @@ IPFWD can provide with careful FreeBSD 11 kernel configuration.
   These graphs show the interaction between CPU utilization and network throughput for each system with respect to IPFWD's acceptance probability. The dashed lines are CPU utilization, solid is network throughput in Mb/second. Higher acceptance probability means a greater chance that a given packet is immediately accepted without further processing.
   
   \begin{center}
-  \includegraphics[width=0.45\textwidth]{isilon40_cpu}
-  \includegraphics[width=0.45\textwidth]{isilon10_cpu}
-  \includegraphics[width=0.45\textwidth]{wwu1_cpu}
-  \includegraphics[width=0.45\textwidth]{virtual10_cpu}
+  \includegraphics[width=0.45\textwidth]{cpu_isilon40}
+  \includegraphics[width=0.45\textwidth]{cpu_isilon10}
+  \includegraphics[width=0.45\textwidth]{cpu_wwu1}
+  \includegraphics[width=0.45\textwidth]{cpu_virtual10}
   \end{center}
 
 % Difference in results between CPU and throughput bound systems
@@ -638,21 +714,6 @@ so that the most commonly applied rules are earliest.
 % Why is this useful?
 
 % Why is this important?
-
-
-% if have a single appendix:
-%\appendix[Proof of the Zonklar Equations]
-% or
-%\appendix  % for no appendix heading
-% do not use \section anymore after \appendix, only \section*
-% is possibly needed
-
-% use appendices with more than one appendix
-% then use \section to start each appendix
-% you must declare a \section before using any
-% \subsection or using \label (\appendices by itself
-% starts a section numbered zero.)
-%
 
 
 \appendices
@@ -808,4 +869,3 @@ H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
 % Note that, LaTeX2e, unlike IEEE journals, places footnotes above bottom
 % floats. This can be corrected via the \fnbelowfloat command of the
 % stfloats package.
-
