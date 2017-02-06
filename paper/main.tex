@@ -66,6 +66,7 @@
 \documentclass[journal]{IEEEtran}
 \usepackage{blindtext}
 \usepackage{graphicx}
+\graphicspath{ {images/} }
 \usepackage{array}
 \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 
@@ -410,7 +411,9 @@ set of the following form: 'prob 0.000 allow ip from any to any'.
 \section{Benchmarking Performance}
 
 % Explain different systems
-Tests were run on three different systems and five different network cards.
+Tests were run on three platforms and five different network cards, resulting
+in five different systems. The most important parameters to our tests are CPU,
+NIC, and ENV. Descriptions of each system are given in the tables below:\\
 
 % Isilon 40G
 \begin{tabular}{ | l | L{19em} | } 
@@ -422,6 +425,7 @@ Tests were run on three different systems and five different network cards.
  CPU &  8 x64 Intel\textsuperscript{\textregistered}\ Xeon\textsuperscript{\textregistered}\ CPU @ 2.20GHz \\
  MEM &  64Gb \\
  NIC &  Ethernet 40Gbase-T \\ 
+ ENV &  Physical \\ 
  \hline
 \end{tabular}\\\\
 
@@ -435,6 +439,7 @@ Tests were run on three different systems and five different network cards.
  CPU &  8 x64 Intel\textsuperscript{\textregistered}\ Xeon\textsuperscript{\textregistered}\ CPU @ 2.20GHz \\
  MEM &  64Gb RAM \\
  NIC &  Ethernet 10Gbase-T \\ 
+ ENV &  Physical \\ 
  \hline
 \end{tabular} \\\\
 
@@ -448,6 +453,7 @@ Tests were run on three different systems and five different network cards.
  CPU &  8 x64 Intel\textsuperscript{\textregistered}\ Core\texttrademark\ i7-2600 CPU @ 3.4GHz \\
  MEM &  16Gb \\ 
  NIC &  ??? \\ 
+ ENV &  Physical \\ 
  \hline
 \end{tabular} \\\\
 
@@ -461,6 +467,7 @@ Tests were run on three different systems and five different network cards.
  CPU &  8 x64 Intel\textsuperscript{\textregistered}\ Core\texttrademark\ i7-2600 CPU @ 3.4GHz \\
  MEM &  16Gb \\
  NIC &  Ethernet 1000baseT \\ 
+ ENV &  Physical \\ 
  \hline
 \end{tabular} \\\\
 
@@ -474,6 +481,7 @@ Tests were run on three different systems and five different network cards.
  CPU &  1 x64 Intel\textsuperscript{\textregistered}\ Xeon\textsuperscript{\textregistered}\ CPU @ 1.80GHz \\
  MEM &  512Mb \\
  NIC &  Ethernet 10Gbase-T \\ 
+ ENV &  Hypervisor \\ 
  \hline
 \end{tabular} \\\\
 
@@ -493,68 +501,115 @@ additional network performance tuning and demonstrates the additional gains
 IPFWD can provide with careful FreeBSD 11 kernel configuration.
 
 
-\subsection{Netperf}
-% Explain tools
-Multiple network performance tools were explored but the final results were
-compiled using Netperf. Netperf was chosen because it was readily available on
-all test platforms, provides built-in CPU utilization measurement, and a wide
-range of test types.
+  \subsection{Netperf}
+  % Explain tools
+  Multiple network performance tools were explored but the final results were
+  compiled using Netperf. Netperf was chosen because it was readily available
+  on all test platforms, provides built-in CPU utilization measurement, and a
+  wide range of test types.
 
-% Explain tests
-The test type UDP\_STREAM was chosen over TCP\_STREAM for simplicity and to
-preserve CPU cycles for IPFW. Raw network throughput and CPU performance is the
-target metric, which can be difficult to assess with TCP. (REFERENCE)
+  % Explain tests
+  The test type UDP\_STREAM was chosen over TCP\_STREAM for simplicity and to
+  preserve CPU cycles for IPFW. Raw network throughput and CPU performance is
+  the target metric, which can be difficult to assess with TCP.
 
-Netperf is single threaded, which allows easier comparison of results between
-systems with different numbers of cores. Additionally, all tests were run while
-the system was idle to minimize contention over system resources. 
+  Netperf is single threaded, which allows easier comparison of results between
+  systems with different numbers of cores. Additionally, all tests were run
+  while the system was idle to minimize contention over system resources. 
 
-% Experimental method
-All tests were conducted using the following steps:
-\begin{enumerate}
-    \item Machine 1
-    \begin{enumerate}
-        \item ipfw
-        \item netserver
-        \item CPU monitor
-    \end{enumerate}
-    \item Machine 2
-    \begin{enumerate}
-        \item ipfw
-        \item ipfwd
-        \item netperf
-        \item CPU monitor
-    \end{enumerate}
-\end{enumerate}
+  % Experimental method
+  All tests were conducted using the following steps:
+  \begin{enumerate}
+      \item Machine 1
+      \begin{enumerate}
+          \item ipfw
+          \item netserver
+          \item CPU monitor
+      \end{enumerate}
+      \item Machine 2
+      \begin{enumerate}
+          \item ipfw
+          \item ipfwd
+          \item netperf
+          \item CPU monitor
+      \end{enumerate}
+  \end{enumerate}
 
-All tests were run with minimal IPFW rule sets in a range of 30 to 60 rules.
-Intuitively, larger production rule sets would benefit even further from IPFWD.
+  All tests were run with minimal IPFW rule sets in a range of 30 to 60 rules.
+  Intuitively, larger production rule sets would benefit even further from
+  IPFWD.
 
-CPU utilization measurement is the most difficult parameter to measure in these
-tests. There are many factors that can account for variability between tests
-and jitter in the results.
 
+  \subsection{CPU Measurement}
+
+  CPU utilization measurement is the most difficult parameter to measure in
+  these tests. There are many factors that can account for variability between
+  tests and jitter in the results. The Netperf manual describes these
+  challenges and the variety of techniques used on different systems. 
+
+  Netperf was run in single threaded mode, which explains why throughput wasn't
+  closer to the maximum throughput for the NIC on each system. The FreeBSD
+  network stack allows multithreaded packet processing by utilizing multiple
+  queues. Since we're indirectly testing the performance of IPFW through
+  Netperf, there are two different CPU measurements to account for: kernel time
+  and user time. Since IPFW runs in the kernel, it's CPU time is classified as
+  kernel time.
+
+  Netperf was able to measure CPU utilization on the Virtualized and WWU
+  systems, but didn't work on the Isilon systems. Instead, ps was used on those
+  systems.  These tests are comparable since both measured total system CPU
+  utilization
+
+
+% Show results graphs, explain axises, etc
 \section{Results}
 
-% Show results
-
+  
+  % throughput/CPU
+  \subsection{Throughput / CPU}
+  These graphs show network throughput divided by CPU utilization for each system. Higher values mean that the CPU time required to process packets is lower.
+  
+  \begin{center}
+  \includegraphics[width=0.45\textwidth]{toc_isilon40}
+  \includegraphics[width=0.45\textwidth]{toc_isilon10}
+  \includegraphics[width=0.45\textwidth]{toc_wwu1}
+  \includegraphics[width=0.45\textwidth]{toc_virtual10}
+  \end{center}
+  
+  %  throughput & CPU
+  \subsection{Throughput \& CPU}
+  These graphs show the interaction between CPU utilization and network throughput for each system with respect to IPFWD's acceptance probability. The dashed lines are CPU utilization, solid is network throughput in Mb/second. Higher acceptance probability means a greater chance that a given packet is immediately accepted without further processing.
+  
+  \begin{center}
+  \includegraphics[width=0.45\textwidth]{isilon40_cpu}
+  \includegraphics[width=0.45\textwidth]{isilon10_cpu}
+  \includegraphics[width=0.45\textwidth]{wwu1_cpu}
+  \includegraphics[width=0.45\textwidth]{virtual10_cpu}
+  \end{center}
 
 % Difference in results between CPU and throughput bound systems
-\subsection{Discussion} 
+  \subsection{Discussion} 
 
-All the systems tested can be broadly categorized into two groups: CPU bound
-and NIC throughput bound. We can see that IPFWD affects performance positively
-but differently for both types. 
+  All the systems tested can be broadly categorized into two groups: CPU bound
+  and NIC throughput bound. We can see that IPFWD affects performance
+  positively but differently for both types. 
 
-In CPU bound systems, IPFWD reduces the number of cycles it takes to process
-each packet, allowing more packets to be processed in the same time and
-increasing throughput. This is shown most clearly in the Virtualized system
-tests, which have the weakest CPU but 10Gb Ethernet NICs. This finding is also
-apparent in the 40Gb Isilon system.
+  In CPU bound systems, IPFWD reduces the number of cycles it takes to process
+  each packet, allowing more packets to be processed in the same time and
+  increasing throughput. This is shown most clearly in the Virtualized system
+  tests, which have the weakest CPU but 10Gb Ethernet NICs. Regardless of test
+  type, the receiving system is always at 100\% CPU utilization. However, as
+  the probability to accept increases in IPFWD the throughput also increases.
+  This clearly shows that IPFWD decreases the CPU load required to process
+  incoming traffic.
 
-In NIC throughput bound systems, reducing the number of CPU cycles to process
-packets will not increase throughput. However, IPFWD still reduces CPU load
-which allows more cycles to be dedicated to other system processes.
+  In NIC throughput bound systems, reducing the number of CPU cycles to process
+  packets will not increase throughput. However, IPFWD still reduces CPU load
+  which allows more cycles to be dedicated to other system processes. This is
+  more difficult to see in the test results, particularly since the CPU
+  measurement tools are inherently imprecise and difficult to compare between
+  systems.
+
 
 \section{Related Work}
 % Cisco and Juniper routers
@@ -562,7 +617,6 @@ which allows more cycles to be dedicated to other system processes.
 Firewall decision trees? (Complete Redundancy Detection)
 
 % Machine learning firewalls
-\blindtext
 
 
 \section{Future Work}
@@ -585,8 +639,6 @@ so that the most commonly applied rules are earliest.
 
 % Why is this important?
 
-\blindtext
-
 
 % if have a single appendix:
 %\appendix[Proof of the Zonklar Equations]
@@ -604,7 +656,7 @@ so that the most commonly applied rules are earliest.
 
 
 \appendices
-\section{Proof of the First Zonklar Equation}
+\section{Additional Figures}
 Some text for the appendix.
 
 % use section* for acknowledgement
@@ -650,6 +702,8 @@ The authors would like to thank...
 H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
   0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
 
+% http://www.netperf.org/svn/netperf2/tags/netperf-2.7.0/doc/netperf.html#CPU-Utilization
+
 \end{thebibliography}
 
 % biography section
@@ -662,23 +716,6 @@ H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
 % simpler here.)
 %\begin{biography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{mshell}}]{Michael Shell}
 % or if you just want to reserve a space for a photo:
-
-\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{picture}}]{John Doe}
-\blindtext
-\end{IEEEbiography}
-
-% You can push biographies down or up by placing
-% a \vfill before or after them. The appropriate
-% use of \vfill depends on what kind of text is
-% on the last page and whether or not the columns
-% are being equalized.
-
-%\vfill
-
-% Can be used to pull up biographies so that the bottom of the last one
-% is flush with the other column.
-%\enlargethispage{-5in}
-
 
 
 % that's all folks
@@ -771,3 +808,4 @@ H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
 % Note that, LaTeX2e, unlike IEEE journals, places footnotes above bottom
 % floats. This can be corrected via the \fnbelowfloat command of the
 % stfloats package.
+

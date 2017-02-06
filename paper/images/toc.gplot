@@ -1,0 +1,25 @@
+set term png
+
+set xlabel 'IPFWD Acceptance Probability'
+set ylabel 'Throughput/CPU'
+fname = "toc.dat"
+
+set title 'Isilon 40G: Throughput/CPU'
+set yrange [120:150]
+set output 'toc_isilon40.png'
+plot fname using 1:2 title 'Isilon 40G' with lines
+
+set title 'Isilon 10G: Throughput/CPU'
+set yrange [120:150]
+set output 'toc_isilon10.png'
+plot fname using 1:3 title 'Isilon 10G' with lines
+
+set title 'WWU 1G: Throughput/CPU'
+set yrange [50:100]
+set output 'toc_wwu1.png'
+plot fname using 1:4 title 'WWU 1G' with lines
+
+set title 'Virtualized 10G: Throughput/CPU'
+set yrange [20:40]
+set output 'toc_virtual10.png'
+plot fname using 1:6 title 'Virtualized 10G' with lines
