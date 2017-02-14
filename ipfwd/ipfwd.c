@@ -159,20 +159,24 @@ int main(int argc, char **argv) {
     slope      = history[0] - history[1];
     prediction = history[0] + slope;
 
-    for (i = hist_size; i > 0; i--)
+    for (i = hist_size; i > 0; i--) {
       history[i] = history[i - 1];
+    }
 
     /* only take action when this load is different than the previous one */
     if (slope) {
 
       /* update probability if load has changed enough */
       if (fabs(previous - history[0]) > sensitivity) {
-        if (static_prob != -1.0)
-          probability = static_prob;
-        else
-          probability = sigmoid(history[0] / 100);
 
-        previous    = history[0];
+        if (static_prob != -1.0) {
+          probability = static_prob;
+        }
+        else {
+          probability = sigmoid(history[0] / 100);
+        }
+
+        previous = history[0];
         set_probability(rule_number, probability);
       }
 

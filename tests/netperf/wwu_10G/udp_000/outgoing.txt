@@ -1,0 +1,24 @@
+root@cf418-nel-02 ~/ipfwd#
+root@cf418-nel-02 ~/ipfwd# netperf -l 30 -c -C -H 10.10.0.2 -t UDP_STREAM
+MIGRATED UDP STREAM TEST from 0.0.0.0 (0.0.0.0) port 0 AF_INET to 10.10.0.2 () port 0AF_INET : histogram : interval : dirty data : demo
+Socket  Message  Elapsed      Messages                   CPU      Service
+Size    Size     Time         Okay Errors   Throughput   Util     Demand
+bytes   bytes    secs            #      #   10^6bits/sec % CC     us/KB
+
+  9216    9216   30.00     3892087   2130     9565.0     13.59    0.931
+ 42080           30.00           0               0.0     10.41    0.713
+
+root@cf418-nel-02 ~/ipfwd#
+
+
+root@cf418-nel-02 ~/i/ipfwd# ./ipfwd 1 0.0
+[ipfwd] starting
+current:  1.178%, error:  1.2%, probability:  0.000%
+current:  3.082%, error:  1.9%, probability:  0.000%
+current:  3.833%, error:  0.8%, probability:  0.000%
+current:  4.523%, error:  0.7%, probability:  0.000%
+current:  5.157%, error:  0.6%, probability:  0.000%
+current:  5.743%, error:  0.6%, probability:  0.000%
+current:  6.281%, error:  0.5%, probability:  0.000%
+current:  5.774%, error:  0.5%, probability:  0.000%
+^C~root@cf418-nel-02 ~/i/ipfwd#

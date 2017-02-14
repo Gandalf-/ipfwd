@@ -249,8 +249,8 @@
 % can use linebreaks \\ within to get better formatting as desired
 \title{Probabilistic Policy Violation Detection with IPFWD}
 
-\author{Dr. Phil Nelson and Austin Voecks% <-this % stops a space
-\thanks{In collaboration with Dell EMC Isilon}}
+\author{Philip Nelson and Austin Voecks% <-this % stops a space
+\thanks{Supported in part by Dell EMC Isilon through a grant and hardware}}
 
 
 % The paper headers
@@ -302,13 +302,12 @@ FreeBSD, IPFW, firewalls, performance.
 
 IPFWD is a daemon for FreeBSD that updates an early rule in IPFW that has a
 chance to accept any packet. The probability of acceptance is updated over time
-and dependent on the current system load. To account for this, IPFWD extends
-IPFW logs to include the likelihood an undetected policy violation occurred.
+and dependent on the current system load. In high performance systems this results in an increase in network throughput.
 
 This approach is based on the premise that firewall performance can be improved
 by reducing the number of rules applied to each packet. Supposing a whitelist
 policy, a firewall has to apply every rule to each packet before it's denied.
-With IPFWD, we have a chance to accept any packet early and skip any further
+With IPFWD, the system has a chance to accept any packet early and skip any further
 computation. Test results shows this reduces the system resources required to
 handle the same amount of traffic.
 
@@ -336,10 +335,11 @@ security policy 100\% of the time.
 \section{IPFW}
 
 % Firewall basics
+\subsection{Firewall Basics}
 Firewalls restrict the types of incoming and outgoing network traffic according
 to a security policy. Without a security policy, administrators cannot know
-what to allow and disallow. Typical firewalls enforce this policy by blocking
-packets that do not match the rules. Whitelist firewalls default action is to
+what to allow and disallow. Typical firewalls enforce the policy by blocking
+packets that do not match the rules. The default action for whitelist firewalls is to
 block all traffic, additional rules describe exceptions. Blacklist firewalls
 are the opposite in that by default they accept all traffic and additional
 rules describe packet types that are not allowed. Since predicting and
@@ -347,6 +347,7 @@ blacklisting all possible attacks is infeasible, whitelist firewall rulesets
 are the accepted standard and the focus of this paper.
 
 % Why was this firewall chosen?
+\subsection{Choice of IPFW}
 IPFW is a stateful firewall written for FreeBSD which supports both IPv4 and
 IPv6. It is comprised of several components: a kernel firewall filter rule
 processor and its integrated packet accounting facility, the logging facility,
@@ -365,7 +366,7 @@ and more.
 Firewall rules are treated by IPFW in a first-match-wins fashion. IPFW also
 contains built-in functionality and rule syntax for probabilistic packet
 matching. From the documentation, this feature was intended for load balancing
-and other traffic shaping tasks. However it's the core of IPFWD's operation. 
+and other traffic shaping tasks. It's the core of IPFWD's operation. 
 
 This paper is not meant as a comparison between IPFW and PF; the functionality
 provided by IPFWD could be ported to PF and serves as a proof of concept for
@@ -377,8 +378,8 @@ firewalls in general.
 % What does it do?
 IPFWD increases firewall performance by reducing the average amount of work it
 takes to process a packet. Depending on the current system load, IPFWD
-increases or decreases the chance the IPFW will immediately accept a given
-packet. It does this by adding and maintaining an early rule in the IPFW rule
+increases or decreases the chance the IPFW will accept a given
+packet early. It does this by adding and maintaining an early rule in the IPFW rule
 set of the following form: \verb|prob 0.000 allow ip from any to any|. 
 
 % How does it work?
@@ -397,9 +398,9 @@ In a typical data center environment the vast majority of network traffic is
 valid and going to be accepted eventually. However, these rule sets are often
 complex and take increasing time to match a given packet depending on the
 length. For a rule set of length $n$, we can expect to a packet to encounter
-$n/2$ failed matches before matching the correct rule and being accepted.
+$\frac{n}{2}$ failed matches before matching the correct rule and being accepted.
 
-IPFWD improves the average number of failed matches before successful match
+IPFWD improves the average number of failed matches before a successful match
 from
 
 \[
@@ -428,17 +429,18 @@ successful match by a factor of
 \]
 
 % - Log extension
-However, while this method increases the speed the system processes packets, it
+While this method increases the speed the system processes packets, it
 creates a chance that packets that would have normally been rejected will get
-through the firewall. We'll refer to these types of packets as invald.
+through the firewall. We'll refer to these types of packets as invald for the purpose of discussion.
 
-To account for this, IPFWD extends the IPFW system logs to include information
-about the early accpetance probability. From this information, administrators
+In order to provide visibility into this process, IPFWD extends the IPFW system logs to include information
+about the early acceptance probability. From this information, administrators
 can extrapolate the probability that additional invalid packets made it through
 the firewall for each that is detected. This is discussed further in the
-Security Implications section.
+\textit{Security Implications} section.
 
 % When should this system be used?
+\subsection{Application}
 IPFWD is not intended to be used on all types of systems. It's application
 instead most directly benefits the following types of systems:
 
@@ -467,16 +469,18 @@ instead most directly benefits the following types of systems:
 
 \end{enumerate}
 
+
+\subsection{Rationale}
 % Explain rationale for it acting as it does
 IPFWD is based on the assumptions that the majority of network traffic is
-valid, malicious events are rare, and 
+valid, malicious events are rare, and TODO
 
 
 \section{Security Implications}
 
 % Talk about security policy enforcement
 
-% What does it mean for security if your ignoring some of the packet?
+% What does it mean for security if you're ignoring some of the packet?
 
 % How do you trust this system?
 
@@ -562,7 +566,7 @@ NIC, and ENV. Descriptions of each system are given in the tables below:\\
  \hline
 \end{tabular} \\\\
 
-The systems tested all used 64bit FreeBSD 11 Release, with varying CPU type,
+The systems tested all used x64 FreeBSD 11 Release, with varying CPU type,
 CPU speed, RAM and network cards. Isilon and WWU systems were both physical
 hardware, while the Virtualized system was in a hypervisor environment hosted
 by a third party service.
@@ -635,7 +639,7 @@ IPFWD can provide with careful FreeBSD 11 kernel configuration.
   Netperf was able to measure CPU utilization on the Virtualized and WWU
   systems, but didn't work on the Isilon systems. Instead, ps was used on those
   systems.  These tests are comparable since both measured total system CPU
-  utilization
+  utilization TODO
 
 
 % Show results graphs, explain axises, etc
@@ -691,6 +695,7 @@ IPFWD can provide with careful FreeBSD 11 kernel configuration.
 % Cisco and Juniper routers
 
 Firewall decision trees? (Complete Redundancy Detection)
+TODO
 
 % Machine learning firewalls
 
@@ -704,9 +709,11 @@ is a could be another solution to this problem. Given logs of common network
 traffic for the system, statistical analysis could show which rules are matched
 more often than others. With this information, the rule set could be reordered
 so that the most commonly applied rules are earliest.
+TODO
 
 
 \section{Conclusion}
+TODO
 % What performance benefit do we get?
 
 % What security cost is there?
@@ -718,13 +725,11 @@ so that the most commonly applied rules are earliest.
 
 \appendices
 \section{Additional Figures}
-Some text for the appendix.
+TODO
 
 % use section* for acknowledgement
 \section*{Acknowledgment}
-
-
-The authors would like to thank...
+TODO
 
 
 % Can use something like this to put references on a page
