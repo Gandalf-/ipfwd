@@ -64,183 +64,23 @@
 % draft mode.
 %
 \documentclass[journal]{IEEEtran}
+
 \usepackage{blindtext}
+\usepackage[style=ieee,backend=biber]{biblatex}
+\usepackage[final]{microtype}
+\usepackage{csquotes}
+\usepackage[english]{babel} 
+\usepackage{array}
+
+\usepackage{hyperref}
+\addbibresource{references.bib}
+
 \usepackage{graphicx}
 \graphicspath{ {images/} }
-\usepackage{array}
+
 \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
-
-% *** CITATION PACKAGES ***
-%
-%\usepackage{cite}
-% cite.sty was written by Donald Arseneau
-% V1.6 and later of IEEEtran pre-defines the format of the cite.sty package
-% \cite{} output to follow that of IEEE. Loading the cite package will
-% result in citation numbers being automatically sorted and properly
-% "compressed/ranged". e.g., [1], [9], [2], [7], [5], [6] without using
-% cite.sty will become [1], [2], [5]--[7], [9] using cite.sty. cite.sty's
-% \cite will automatically add leading space, if needed. Use cite.sty's
-% noadjust option (cite.sty V3.8 and later) if you want to turn this off.
-% cite.sty is already installed on most LaTeX systems. Be sure and use
-% version 4.0 (2003-05-27) and later if using hyperref.sty. cite.sty does
-% not currently provide for hyperlinked citations.
-% The latest version can be obtained at:
-% http://www.ctan.org/tex-archive/macros/latex/contrib/cite/
-% The documentation is contained in the cite.sty file itself.
-
-
-
-% *** GRAPHICS RELATED PACKAGES ***
-%
-\ifCLASSINFOpdf
-  % \usepackage[pdftex]{graphicx}
-  % declare the path(s) where your graphic files are
-  % \graphicspath{{../pdf/}{../jpeg/}}
-  % and their extensions so you won't have to specify these with
-  % every instance of \includegraphics
-  % \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
-\else
-  % or other class option (dvipsone, dvipdf, if not using dvips). graphicx
-  % will default to the driver specified in the system graphics.cfg if no
-  % driver is specified.
-  % \usepackage[dvips]{graphicx}
-  % declare the path(s) where your graphic files are
-  % \graphicspath{{../eps/}}
-  % and their extensions so you won't have to specify these with
-  % every instance of \includegraphics
-  % \DeclareGraphicsExtensions{.eps}
-\fi
-% graphicx was written by David Carlisle and Sebastian Rahtz. It is
-% required if you want graphics, photos, etc. graphicx.sty is already
-% installed on most LaTeX systems. The latest version and documentation can
-% be obtained at: 
-% http://www.ctan.org/tex-archive/macros/latex/required/graphics/
-% Another good source of documentation is "Using Imported Graphics in
-% LaTeX2e" by Keith Reckdahl which can be found as epslatex.ps or
-% epslatex.pdf at: http://www.ctan.org/tex-archive/info/
-%
-% latex, and pdflatex in dvi mode, support graphics in encapsulated
-% postscript (.eps) format. pdflatex in pdf mode supports graphics
-% in .pdf, .jpeg, .png and .mps (metapost) formats. Users should ensure
-% that all non-photo figures use a vector format (.eps, .pdf, .mps) and
-% not a bitmapped formats (.jpeg, .png). IEEE frowns on bitmapped formats
-% which can result in "jaggedy"/blurry rendering of lines and letters as
-% well as large increases in file sizes.
-%
-% You can find documentation about the pdfTeX application at:
-% http://www.tug.org/applications/pdftex
-
-
-
-% *** SUBFIGURE PACKAGES ***
-%\usepackage[tight,footnotesize]{subfigure}
-% subfigure.sty was written by Steven Douglas Cochran. This package makes it
-% easy to put subfigures in your figures. e.g., "Figure 1a and 1b". For IEEE
-% work, it is a good idea to load it with the tight package option to reduce
-% the amount of white space around the subfigures. subfigure.sty is already
-% installed on most LaTeX systems. The latest version and documentation can
-% be obtained at:
-% http://www.ctan.org/tex-archive/obsolete/macros/latex/contrib/subfigure/
-% subfigure.sty has been superceeded by subfig.sty.
-
-%\usepackage[caption=false]{caption}
-%\usepackage[font=footnotesize]{subfig}
-% subfig.sty, also written by Steven Douglas Cochran, is the modern
-% replacement for subfigure.sty. However, subfig.sty requires and
-% automatically loads Axel Sommerfeldt's caption.sty which will override
-% IEEEtran.cls handling of captions and this will result in nonIEEE style
-% figure/table captions. To prevent this problem, be sure and preload
-% caption.sty with its "caption=false" package option. This is will preserve
-% IEEEtran.cls handing of captions. Version 1.3 (2005/06/28) and later 
-% (recommended due to many improvements over 1.2) of subfig.sty supports
-% the caption=false option directly:
-%\usepackage[caption=false,font=footnotesize]{subfig}
-%
-% The latest version and documentation can be obtained at:
-% http://www.ctan.org/tex-archive/macros/latex/contrib/subfig/
-% The latest version and documentation of caption.sty can be obtained at:
-% http://www.ctan.org/tex-archive/macros/latex/contrib/caption/
-
-
-% *** FLOAT PACKAGES ***
-%
-%\usepackage{fixltx2e}
-% fixltx2e, the successor to the earlier fix2col.sty, was written by
-% Frank Mittelbach and David Carlisle. This package corrects a few problems
-% in the LaTeX2e kernel, the most notable of which is that in current
-% LaTeX2e releases, the ordering of single and double column floats is not
-% guaranteed to be preserved. Thus, an unpatched LaTeX2e can allow a
-% single column figure to be placed prior to an earlier double column
-% figure. The latest version and documentation can be found at:
-% http://www.ctan.org/tex-archive/macros/latex/base/
-
-
-
-%\usepackage{stfloats}
-% stfloats.sty was written by Sigitas Tolusis. This package gives LaTeX2e
-% the ability to do double column floats at the bottom of the page as well
-% as the top. (e.g., "\begin{figure*}[!b]" is not normally possible in
-% LaTeX2e). It also provides a command:
-%\fnbelowfloat
-% to enable the placement of footnotes below bottom floats (the standard
-% LaTeX2e kernel puts them above bottom floats). This is an invasive package
-% which rewrites many portions of the LaTeX2e float routines. It may not work
-% with other packages that modify the LaTeX2e float routines. The latest
-% version and documentation can be obtained at:
-% http://www.ctan.org/tex-archive/macros/latex/contrib/sttools/
-% Documentation is contained in the stfloats.sty comments as well as in the
-% presfull.pdf file. Do not use the stfloats baselinefloat ability as IEEE
-% does not allow \baselineskip to stretch. Authors submitting work to the
-% IEEE should note that IEEE rarely uses double column equations and
-% that authors should try to avoid such use. Do not be tempted to use the
-% cuted.sty or midfloat.sty packages (also by Sigitas Tolusis) as IEEE does
-% not format its papers in such ways.
-
-
-%\ifCLASSOPTIONcaptionsoff
-%  \usepackage[nomarkers]{endfloat}
-% \let\MYoriglatexcaption\caption
-% \renewcommand{\caption}[2][\relax]{\MYoriglatexcaption[#2]{#2}}
-%\fi
-% endfloat.sty was written by James Darrell McCauley and Jeff Goldberg.
-% This package may be useful when used in conjunction with IEEEtran.cls'
-% captionsoff option. Some IEEE journals/societies require that submissions
-% have lists of figures/tables at the end of the paper and that
-% figures/tables without any captions are placed on a page by themselves at
-% the end of the document. If needed, the draftcls IEEEtran class option or
-% \CLASSINPUTbaselinestretch interface can be used to increase the line
-% spacing as well. Be sure and use the nomarkers option of endfloat to
-% prevent endfloat from "marking" where the figures would have been placed
-% in the text. The two hack lines of code above are a slight modification of
-% that suggested by in the endfloat docs (section 8.3.1) to ensure that
-% the full captions always appear in the list of figures/tables - even if
-% the user used the short optional argument of \caption[]{}.
-% IEEE papers do not typically make use of \caption[]'s optional argument,
-% so this should not be an issue. A similar trick can be used to disable
-% captions of packages such as subfig.sty that lack options to turn off
-% the subcaptions:
-% For subfig.sty:
-% \let\MYorigsubfloat\subfloat
-% \renewcommand{\subfloat}[2][\relax]{\MYorigsubfloat[]{#2}}
-% For subfigure.sty:
-% \let\MYorigsubfigure\subfigure
-% \renewcommand{\subfigure}[2][\relax]{\MYorigsubfigure[]{#2}}
-% However, the above trick will not work if both optional arguments of
-% the \subfloat/subfig command are used. Furthermore, there needs to be a
-% description of each subfigure *somewhere* and endfloat does not add
-% subfigure captions to its list of figures. Thus, the best approach is to
-% avoid the use of subfigure captions (many IEEE journals avoid them anyway)
-% and instead reference/explain all the subfigures within the main caption.
-% The latest version of endfloat.sty and its documentation can obtained at:
-% http://www.ctan.org/tex-archive/macros/latex/contrib/endfloat/
-%
-% The IEEEtran \ifCLASSOPTIONcaptionsoff conditional can also be used
-% later in the document, say, to conditionally put the References on a 
-% page by themselves.
-
-
-% correct bad hyphenation here
-\hyphenation{op-tical net-works semi-conduc-tor}
+\providecommand*{\opt}[1]{\texttt{#1}}
+\providecommand*{\pkg}[1]{\textsf{#1}}
 
 
 \begin{document}
@@ -250,7 +90,7 @@
 \title{Probabilistic Policy Violation Detection with IPFWD}
 
 \author{Philip Nelson and Austin Voecks% <-this % stops a space
-\thanks{Supported in part by Dell EMC Isilon through a grant and hardware}}
+\thanks{Supported in part by Dell EMC Isilon through grant and hardware}}
 
 
 % The paper headers
@@ -263,7 +103,6 @@
 % *** name in the headers of peer review papers.                   ***
 % You can use \ifCLASSOPTIONpeerreview for conditional compilation here if
 % you desire.
-
 
 % make the title area
 \maketitle
@@ -298,438 +137,587 @@ FreeBSD, IPFW, firewalls, performance.
 \IEEEpeerreviewmaketitle
 
 
+% TODO rewrite
 \section{Introduction}
 
-IPFWD is a daemon for FreeBSD that updates an early rule in IPFW that has a
-chance to accept any packet. The probability of acceptance is updated over time
-and dependent on the current system load. In high performance systems this results in an increase in network throughput.
+  IPFWD is a daemon for FreeBSD that updates an early rule in IPFW that has a
+  chance to accept any packet. The probability of acceptance is updated over
+  time and dependent on the current system load. In high performance systems
+  this results in an increase in network throughput.
 
-This approach is based on the premise that firewall performance can be improved
-by reducing the number of rules applied to each packet. Supposing a whitelist
-policy, a firewall has to apply every rule to each packet before it's denied.
-With IPFWD, the system has a chance to accept any packet early and skip any further
-computation. Test results shows this reduces the system resources required to
-handle the same amount of traffic.
+  This approach is based on the premise that firewall performance can be
+  improved by reducing the number of rules applied to each packet. Supposing a
+  whitelist policy, a firewall has to apply every rule to each packet before
+  it's denied.  With IPFWD, the system has a chance to accept any packet early
+  and skip any further computation. Test results shows this reduces the system
+  resources required to handle the same amount of traffic.
 
-This is a shift in mindset from typical firewalls. Instead of enforcing every
-part of a security policy all the time, IPFWD enforces the policy some of the
-time and extrapolates from the violations it encounters. This provides insight
-into the violations that weren't detected. For this cost, you gain increased
-firewall performance and network throughput in resource bound systems. It's
-acceptable to allow a percentage of policy violations given that network
-traffic patterns are often repeated and the goal is detection and not immediate
-prevention. Preventative action may be taken later when resource requirements
-are lower.
+  This is a shift in mindset from typical firewalls \cite{networksecurity}.
+  Instead of enforcing every part of a security policy all the time, IPFWD
+  enforces the policy some of the time and extrapolates from the violations it
+  encounters.  This provides insight into the violations that weren't detected.
+  For this cost, you gain increased firewall performance and network throughput
+  in resource bound systems. It's acceptable to allow a percentage of policy
+  violations given that network traffic patterns are often repeated and the
+  goal is detection and not immediate prevention. Preventative action may be
+  taken later when resource requirements are lower.
 
-As an example, under heavy load IPFWD may immediately accept 40\% of packets.
-Supposing a port scan was initiated during this time and rules exist to block
-it, 60\% of the port scan would still be rejected and logged. Since the
-probability will fluctuate over time, IPFWD provides information in the IPFW
-logs to show the chance undetected violations occurred for each detected
-violation. IPFWD allows administrators to keep extensive rule sets that fully
-implement their security policy. Instead of having to simplify rule sets to
-increase performance, IPFWD balances policy enforcement and performance
-automatically. Under normal or light load, IPFWD will enforce the entire
-security policy 100\% of the time.
+  As an example, under heavy load IPFWD may immediately accept 40\% of packets.
+  Supposing a port scan was initiated during this time and rules exist to block
+  it, 60\% of the port scan would still be rejected and logged. Since the
+  probability will fluctuate over time, IPFWD provides information in the IPFW
+  logs to show the chance undetected violations occurred for each detected
+  violation. IPFWD allows administrators to keep extensive rule sets that fully
+  implement their security policy. Instead of having to simplify rule sets to
+  increase performance, IPFWD balances policy enforcement and performance
+  automatically. Under normal or light load, IPFWD will enforce the entire
+  security policy 100\% of the time.
 
 \section{IPFW}
 
-% Firewall basics
-\subsection{Firewall Basics}
-Firewalls restrict the types of incoming and outgoing network traffic according
-to a security policy. Without a security policy, administrators cannot know
-what to allow and disallow. Typical firewalls enforce the policy by blocking
-packets that do not match the rules. The default action for whitelist firewalls is to
-block all traffic, additional rules describe exceptions. Blacklist firewalls
-are the opposite in that by default they accept all traffic and additional
-rules describe packet types that are not allowed. Since predicting and
-blacklisting all possible attacks is infeasible, whitelist firewall rulesets
-are the accepted standard and the focus of this paper.
+  % Firewall basics
+  \subsection{Firewall Basics}
 
-% Why was this firewall chosen?
-\subsection{Choice of IPFW}
-IPFW is a stateful firewall written for FreeBSD which supports both IPv4 and
-IPv6. It is comprised of several components: a kernel firewall filter rule
-processor and its integrated packet accounting facility, the logging facility,
-NAT, the dummynet traffic shaper, a forward facility, a bridge facility, and
-an ipstealth facility.
+    Firewalls restrict the types of incoming and outgoing network traffic
+    according to a security policy. Without a security policy, administrators
+    cannot know what to allow and disallow. Typical firewalls enforce the
+    policy by blocking packets that do not match the rules. The default action
+    for whitelist firewalls is to block all traffic, additional rules describe
+    exceptions. Blacklist firewalls are the opposite in that by default they
+    accept all traffic and additional rules describe packet types that are not
+    allowed. Since predicting and blacklisting all possible attacks is
+    infeasible, whitelist firewall rulesets are the accepted standard and the
+    focus of this paper.
 
-IPFW was chosen for it's close integration with the FreeBSD operating system,
-in kernel packet filter, and general performance. Performance is dependent on
-system parameters and circumstances, but IPFW outperforms PF in stateful packet
-filtering. Stateful rules are more powerful and flexible than stateless rules,
-were no session information is maintained. Additionally, the capabilities of
-IPFW extend beyond packet filtering into source based routing, traffic shaping
-and more. 
+  % Why was this firewall chosen?
+  \subsection{Choice of IPFW}
 
-% First match wins rule system and probabilistic matching
-Firewall rules are treated by IPFW in a first-match-wins fashion. IPFW also
-contains built-in functionality and rule syntax for probabilistic packet
-matching. From the documentation, this feature was intended for load balancing
-and other traffic shaping tasks. It's the core of IPFWD's operation. 
+    IPFW is a stateful firewall written for FreeBSD which supports both IPv4
+    and IPv6. It is comprised of several components: a kernel firewall filter
+    rule processor and its integrated packet accounting facility, the logging
+    facility, NAT, the dummynet traffic shaper, a forward facility, a bridge
+    facility, and an ipstealth facility \cite{freebsdhandbook}.
 
-This paper is not meant as a comparison between IPFW and PF; the functionality
-provided by IPFWD could be ported to PF and serves as a proof of concept for
-firewalls in general.
+    IPFW was chosen for it's close integration with the FreeBSD operating
+    system, in kernel packet filter, and general performance. Performance is
+    dependent on system parameters and circumstances, but IPFW outperforms PF
+    in stateful packet filtering \cite{ipfwvspf}. Stateful rules are more
+    powerful and flexible than stateless rules, were no session information is
+    maintained \cite{networksecurity}.  Additionally, the capabilities of IPFW
+    extend beyond packet filtering into source based routing, traffic shaping
+    and more. 
+
+    % First match wins rule system and probabilistic matching
+    Firewall rules are treated by IPFW in a first-match-wins fashion. IPFW also
+    contains built-in functionality and rule syntax for probabilistic packet
+    matching. From the documentation, this feature was intended for load
+    balancing and other traffic shaping tasks. It's the core of IPFWD's
+    operation. 
+
+    This paper is not meant as a comparison between IPFW and PF; the
+    functionality provided by IPFWD could be ported to PF and serves as a proof
+    of concept for firewalls in general.
 
 
 \section{IPFWD}
 
-% What does it do?
-IPFWD increases firewall performance by reducing the average amount of work it
-takes to process a packet. Depending on the current system load, IPFWD
-increases or decreases the chance the IPFW will accept a given
-packet early. It does this by adding and maintaining an early rule in the IPFW rule
-set of the following form: \verb|prob 0.000 allow ip from any to any|. 
+  % What does it do?
+  IPFWD increases firewall performance by reducing the average amount of work
+  it takes to process a packet. Depending on the current system load, IPFWD
+  increases or decreases the chance the IPFW will accept a given packet early.
+  It does this by adding and maintaining an early rule in the IPFW rule set of
+  the following form: \verb|prob 0.000 allow ip from any to any|. 
 
-% How does it work?
-% - Probabilistic packet matching
-Since IPFW uses a first-match-wins rule system, this early rule will be
-encountered before the majority of the other rules in the rule set.  The
-probability given in this rule determines the chance that we skip processing
-all further rules, supposing that there hasn't been a match already.  
+  % How does it work?
+  % - Probabilistic packet matching
+  IPFWD's behavior is based on the assumption that the majority of network
+  traffic is valid, malicious events are rare \cite{networktrafficanalysis},
+  and it's sufficient to be notified of security policy violations instead of
+  always stopping them \cite{TODO}.
 
-This is especially valuable for a whitelist firewall rule set dealing with
-large amounts of rejected traffic; normally each rejected packet has all rules
-applied to it while IPFW looks for a match.  When no matches are encountered,
-the default rule is employed and the packet is rejected. 
+  Since IPFW uses a first-match-wins rule system, this early rule will be
+  encountered before the majority of the other rules in the rule set.  The
+  probability given in this rule determines the chance that we skip processing
+  all further rules, supposing that there hasn't been a match already.  
 
-In a typical data center environment the vast majority of network traffic is
-valid and going to be accepted eventually. However, these rule sets are often
-complex and take increasing time to match a given packet depending on the
-length. For a rule set of length $n$, we can expect to a packet to encounter
-$\frac{n}{2}$ failed matches before matching the correct rule and being accepted.
+  This is especially valuable for a whitelist firewall rule set dealing with
+  large amounts of rejected traffic; normally each rejected packet has all
+  rules applied to it while IPFW looks for a match.  When no matches are
+  encountered, the default rule is employed and the packet is rejected. 
 
-IPFWD improves the average number of failed matches before a successful match
-from
+  In a typical data center environment the vast majority of network traffic is
+  valid and going to be accepted eventually \cite{TODO}. However, these rule
+  sets are often complex and take increasing time to match a given packet
+  depending on the length. For a rule set of length $n$, we can expect to a
+  packet to encounter $\frac{n}{2}$ failed matches before matching the correct
+  rule and being accepted.
 
-\[
-\frac{n}{2}
-\]
+  IPFWD improves the average number of failed matches before a successful match
+  from
 
-to
+  \[
+  \frac{n}{2}
+  \]
 
-\[
-\Big(k \cdot \mathsf{P}(\textit{EA})\Big) + 
-\Big(\frac{n}{2} \cdot \mathsf{P}(\neg{\textit{EA}})\Big) 
-\]
+  to
 
-where $k$ is number of rules before the early acceptance rule and
-$\mathsf{P}(\textit{EA})$ is the probability that the early acceptance rule is
-matched.
+  \[
+  \Big(k \cdot \mathsf{P}(\textit{EA})\Big) + 
+  \Big(\frac{n}{2} \cdot \mathsf{P}(\neg{\textit{EA}})\Big) 
+  \]
 
-Removing the constant $k$, IPFWD reduces the number of failed matches before a
-successful match by a factor of
+  where $k$ is number of rules before the early acceptance rule and
+  $\mathsf{P}(\textit{EA})$ is the probability that the early acceptance rule
+  is matched.
 
-\[
-\frac
-    {\frac{n}{2}}
-    {\frac{n}{2} \cdot \mathsf{P}(\neg{\textit{EA}})} 
-= \frac{1}{\mathsf{P}(\neg{\textit{EA})}}.
-\]
+  Removing the constant $k$, IPFWD reduces the number of failed matches before
+  a successful match by a factor of
 
-% - Log extension
-While this method increases the speed the system processes packets, it
-creates a chance that packets that would have normally been rejected will get
-through the firewall. We'll refer to these types of packets as invald for the purpose of discussion.
+  \[
+  \frac
+      {\frac{n}{2}}
+      {\frac{n}{2} \cdot \mathsf{P}(\neg{\textit{EA}})} 
+  = \frac{1}{\mathsf{P}(\neg{\textit{EA})}}.
+  \]
 
-In order to provide visibility into this process, IPFWD extends the IPFW system logs to include information
-about the early acceptance probability. From this information, administrators
-can extrapolate the probability that additional invalid packets made it through
-the firewall for each that is detected. This is discussed further in the
-\textit{Security Implications} section.
+  % - Log extension
+  While this method increases the speed the system processes packets, it
+  creates a chance that packets that would have normally been rejected will get
+  through the firewall. We'll refer to these types of packets as invalid for
+  the purpose of discussion.
 
-% When should this system be used?
-\subsection{Application}
-IPFWD is not intended to be used on all types of systems. It's application
-instead most directly benefits the following types of systems:
+  In order to provide visibility into this process, IPFWD extends the IPFW
+  system logs to include information about the early acceptance probability.
+  From this information, administrators can extrapolate the probability that
+  additional invalid packets made it through the firewall for each that is
+  detected. This is discussed further in the \textit{Security Implications}
+  section.
 
-\begin{enumerate}
-    \item \textbf{High Network Performance}\\
-      The gains provided by IPFWD are only apparent in systems were network
-      throughput is matched by or out performs CPU speed. Systems that can
-      already easily handle fully processing each packet will not benefit by
-      reducing processing time. Given modern CPU clock speeds, systems with
-      network cards slower than 1 Gb/sec will likely not benefit either.
+  % When should this system be used?
+  \subsection{Application}
 
-    \item \textbf{Resource Conscious}\\
-      In line with high performance systems, systems with strict resource
-      restrictions can benefit by the reduced network related CPU usage.
+    IPFWD is not intended to be used on all types of systems. It's application
+    instead most directly benefits the following types of systems:
 
-    \item \textbf{Complex Firewall Requirements}\\
-      IPFWD works by reducing the average number of rules that fail to match
-      before a packet is finished being processed. Very simple rulesets will
-      gain little from reducing the number of rules applied to each packet.
+    \begin{enumerate}
+      \item \textbf{High Network Performance}
 
-    \item \textbf{Detection Based Security Policy}\\ 
-      By using IPFWD, administrators sacrifice the assurance that every invalid
-      packet will be rejected.  However, they are still provided information as
-      to whether some invalid packets were rejected, and that information can
-      be used to infer the existance of additional invalid packets. 
+        The gains provided by IPFWD are only apparent in systems were network
+        throughput is matched by or out performs CPU speed. Systems that can
+        already easily handle fully processing each packet will not benefit by
+        reducing processing time. Given modern CPU clock speeds, systems with
+        network cards slower than 1 Gb/sec will likely not benefit either.
 
-\end{enumerate}
+      \item \textbf{Resource Conscious}
 
+        In line with high performance systems, systems with strict resource
+        restrictions can benefit by the reduced network related CPU usage.
 
-\subsection{Rationale}
-% Explain rationale for it acting as it does
-IPFWD is based on the assumptions that the majority of network traffic is
-valid, malicious events are rare, and TODO
+      \item \textbf{Complex Firewall Requirements}
+
+        IPFWD works by reducing the average number of rules that fail to match
+        before a packet is finished being processed. Very simple rulesets will
+        gain little from reducing the number of rules applied to each packet.
+
+      \item \textbf{Detection Based Security Policy}
+
+        By using IPFWD, administrators sacrifice the assurance that every
+        invalid packet will be rejected.  However, they are still provided
+        information as to whether some invalid packets were rejected, and that
+        information can be used to infer the existence of additional invalid
+        packets. 
+
+    \end{enumerate}
 
 
 \section{Security Implications}
 
-% Talk about security policy enforcement
+  % Talk about security policy enforcement
+  Security policies define what is and is not allowed in an organization
+  \cite{TODO}. At the network and host level, this is implemented in part by a
+  firewall rule set. A policy violation on an internal network is more serious
+  than an external network. Internet facing hosts can expect to be scanned,
+  experience network anomalies and be attacked by third party agents
+  semi-regularly. 
 
-% What does it mean for security if you're ignoring some of the packet?
+  However when this happens on an internal network, there is a strong
+  possibility something else is going wrong. The usage of IPFWD is predicated
+  on the assumption that it's sufficient to be notified of these events so
+  further action can be taken later than to always immediately stop them.
 
-% How do you trust this system?
+  % What does it mean for security if you're ignoring some of the packet?
+  Allowing some percentage of network packets through the firewall without
+  inspection does mean that attacks that would have normally been blocked could
+  succeed. In addition to performance improvements, the following factors help
+  to account for this risk:
 
-% Talk about shift in mindset from "blocking attacks" to "detecting attacks"
-% - Why is this reasonable?
-% - Is this really different than traditional firewalls?
-
-
-\section{Benchmarking Performance}
-
-% Explain different systems
-Tests were run on three platforms and five different network cards, resulting
-in five different systems. The most important parameters to our tests are CPU,
-NIC, and ENV. Descriptions of each system are given in the tables below:\\
-
-% Isilon 40G
-\begin{tabular}{ | l | L{19em} | } 
- \hline
- \multicolumn{2}{|c|}{Isilon OneFS 40Gb System} \\
- \hline
- \hline
- OS  &  FreeBSD 11 Release \\
- CPU &  8 x64 Intel\textsuperscript{\textregistered}\ Xeon\textsuperscript{\textregistered}\ CPU @ 2.20GHz \\
- MEM &  64Gb \\
- NIC &  Ethernet 40Gbase-T \\ 
- ENV &  Physical \\ 
- \hline
-\end{tabular}\\\\
-
-% Isilon 10G
-\begin{tabular}{ | l | L{19em} | } 
- \hline
- \multicolumn{2}{|c|}{Isilon OneFS 10Gb System} \\
- \hline
- \hline
- OS  &  FreeBSD 11 Release \\
- CPU &  8 x64 Intel\textsuperscript{\textregistered}\ Xeon\textsuperscript{\textregistered}\ CPU @ 2.20GHz \\
- MEM &  64Gb RAM \\
- NIC &  Ethernet 10Gbase-T \\ 
- ENV &  Physical \\ 
- \hline
-\end{tabular} \\\\
-
-% WWU 10G
-\begin{tabular}{ | l | L{19em} | } 
- \hline
- \multicolumn{2}{|c|}{ WWU 10Gb System } \\
- \hline
- \hline
- OS  &  FreeBSD 11 Release \\
- CPU &  8 x64 Intel\textsuperscript{\textregistered}\ Core\texttrademark\ i7-2600 CPU @ 3.4GHz \\
- MEM &  16Gb \\ 
- NIC &  ??? \\ 
- ENV &  Physical \\ 
- \hline
-\end{tabular} \\\\
-
-% WWU 1G
-\begin{tabular}{ | l | L{19em} | } 
- \hline
- \multicolumn{2}{|c|}{ WWU 1Gb System } \\
- \hline
- \hline
- OS  &  FreeBSD 11 Release \\
- CPU &  8 x64 Intel\textsuperscript{\textregistered}\ Core\texttrademark\ i7-2600 CPU @ 3.4GHz \\
- MEM &  16Gb \\
- NIC &  Ethernet 1000baseT \\ 
- ENV &  Physical \\ 
- \hline
-\end{tabular} \\\\
-
-% Virtualized 10G
-\begin{tabular}{ | l | L{19em} | } 
- \hline
- \multicolumn{2}{|c|}{ Virtualized 10G System } \\
- \hline
- \hline
- OS  &  FreeBSD 11 Release \\
- CPU &  1 x64 Intel\textsuperscript{\textregistered}\ Xeon\textsuperscript{\textregistered}\ CPU @ 1.80GHz \\
- MEM &  512Mb \\
- NIC &  Ethernet 10Gbase-T \\ 
- ENV &  Hypervisor \\ 
- \hline
-\end{tabular} \\\\
-
-The systems tested all used x64 FreeBSD 11 Release, with varying CPU type,
-CPU speed, RAM and network cards. Isilon and WWU systems were both physical
-hardware, while the Virtualized system was in a hypervisor environment hosted
-by a third party service.
-
-Virtualization makes it more difficult to have the same confidence in the
-results as with the physical machines. Tests on the Virtualized system were
-repeated additional times to account for the variability of the underlying
-physical hardware and contention between virtual machines.
-
-The WWU and Virtualized tests were conducted on stock FreeBSD 11 without
-additional network performance configuration applied. Isilon OneFS does contain
-additional network performance tuning and demonstrates the additional gains
-IPFWD can provide with careful FreeBSD 11 kernel configuration.
-
-
-  \subsection{Netperf}
-  % Explain tools
-  Multiple network performance tools were explored but the final results were
-  compiled using Netperf. Netperf was chosen because it was readily available
-  on all test platforms, provides built-in CPU utilization measurement, and a
-  wide range of test types.
-
-  % Explain tests
-  The test type UDP\_STREAM was chosen over TCP\_STREAM for simplicity and to
-  preserve CPU cycles for IPFW. Raw network throughput and CPU performance is
-  the target metric, which can be difficult to assess with TCP.
-
-  Netperf is single threaded, which allows easier comparison of results between
-  systems with different numbers of cores. Additionally, all tests were run
-  while the system was idle to minimize contention over system resources. 
-
-  % Experimental method
-  All tests were conducted using the following steps:
   \begin{enumerate}
-      \item Machine 1
-      \begin{enumerate}
-          \item ipfw
-          \item netserver
-          \item CPU monitor
-      \end{enumerate}
-      \item Machine 2
-      \begin{enumerate}
-          \item ipfw
-          \item ipfwd
-          \item netperf
-          \item CPU monitor
-      \end{enumerate}
+
+    % Bad things are often repeated
+    \item \textbf{Repetition} 
+
+      Malicious network activity and network errors are likely to be repeated
+      over time \cite{TODO}. The longer the activity persists, the more likely
+      it is to be detected by IPFW even when IPFWD is allowing a high
+      percentage of the network traffic through unchecked.
+
+    \item \textbf{Disruption} 
+
+      Though some malicious network activity may only consist of a single
+      packet, others will require multiple packets. Since IPFW works on a
+      per-packet basis, malicious network activity will experience
+      approximately $m\%$ packet loss where $m$ is IPFWD's probability of early
+      acceptance. The exact effect this would have on malware or reconnaissance
+      would depend, but generally will increase the chance they fail or produce
+      invalid results.
+
   \end{enumerate}
 
-  All tests were run with minimal IPFW rule sets in a range of 30 to 60 rules.
-  Intuitively, larger production rule sets would benefit even further from
-  IPFWD.
+  % How do you trust this system?
+  Knowledge of a network's traffic patterns and the additional log information
+  provided by IPFWD can help. It allows administrators to extrapolate the
+  existence of undetected network events through simple statistical models.
 
+  % Talk about shift in mindset from "blocking attacks" to "detecting attacks"
+  % - Why is this reasonable?
+  % - Is this really different than traditional firewalls?
+  TODO
+
+  % example application
+  \subsection{Example Scenario} 
+
+    Suppose each host in a data center's internal network is running IPFWD on
+    each host, average CPU usage is $75\%$, and have rule sets blocking common
+    network attacks. One of the hosts has been compromised and begins
+    conducting network reconnaissance by port scanning the other hosts on the
+    network. 
+
+    Firewall rules are in place to block host to host communication $m\%$ of
+    the ports being scanned. This means that $1 - m\%$ of the scan would be
+    allowed regardless of IPFWD's action. This percentage represents valid
+    host-to-host communication as determined by the security policy.
+
+    IPFWD would allow $75\%$ of the policy violating port scan through to the
+    host, and $75\%$ of the replies back to the compromised host. This results
+    in $75\% * 75\% = 56.25\%$ of the port scan that should have been stopped
+    succeeding.  However, the other $1 - 56.25 = 43.75\%$ of the port scan was
+    blocked and logged, alerting system administrators to the presence of
+    malicious network activity so further action can be taken.
+
+  % describe difference between reply and no reply violations
+  \subsection{Security Cost}
+
+    The chance of missing a security policy violation depends on the type of
+    traffic. The following situations exist when both incoming and outgoing
+    firewall rules are employed:
+
+    \begin{enumerate}
+
+      % only one chance to catch
+      \item \textbf{Incoming or Outgoing + No Reply}
+
+        Here, the firewall only has one chance to catch the policy violation.
+        So if the early acceptance probability is $m$, then $m\%$ of the policy
+        violating packets will be allowed.
+
+      % two chances to catch 
+      \item \textbf{Incoming or Outgoing + Reply}
+
+        Here, the firewall has two chances to catch the policy violation.  So
+        if the early acceptance probability is $m$, then $m'\%$ of the policy
+        violating packets will be allowed where $m' = m * m$.
+
+    \end{enumerate}
+
+
+% Explain different systems and tests
+\section{Benchmarking Performance}
+
+  Tests were run on three platforms and five different network cards, resulting
+  in five different systems. The most important parameters to our tests are
+  CPU, NIC, and ENV. Descriptions of each system are given in the tables
+  below:\\
+
+  % Isilon 40G
+  \begin{tabular}{ | l | L{19em} | } 
+    \hline
+    \multicolumn{2}{|c|}{Isilon OneFS 40Gb System} \\
+    \hline
+    \hline
+    OS  &  FreeBSD 11 Release \\
+    CPU &  8 x64 Intel\textsuperscript{\textregistered}\ Xeon\textsuperscript{\textregistered}\ CPU @ 2.20GHz \\
+    MEM &  64Gb \\
+    NIC &  Ethernet 40Gbase-T \\ 
+    ENV &  Physical \\ 
+    \hline
+  \end{tabular}\\\\
+
+  % Isilon 10G
+  \begin{tabular}{ | l | L{19em} | } 
+    \hline
+    \multicolumn{2}{|c|}{Isilon OneFS 10Gb System} \\
+    \hline
+    \hline
+    OS  &  FreeBSD 11 Release \\
+    CPU &  8 x64 Intel\textsuperscript{\textregistered}\ Xeon\textsuperscript{\textregistered}\ CPU @ 2.20GHz \\
+    MEM &  64Gb RAM \\
+    NIC &  Ethernet 10Gbase-T \\ 
+    ENV &  Physical \\ 
+    \hline
+  \end{tabular} \\\\
+
+  % WWU 1G
+  \begin{tabular}{ | l | L{19em} | } 
+    \hline
+    \multicolumn{2}{|c|}{ WWU 1Gb System } \\
+    \hline
+    \hline
+    OS  &  FreeBSD 11 Release \\
+    CPU &  8 x64 Intel\textsuperscript{\textregistered}\ Core\texttrademark\ i7-2600 CPU @ 3.4GHz \\
+    MEM &  16Gb \\
+    NIC &  Ethernet 1000baseT \\ 
+    ENV &  Physical \\ 
+    \hline
+  \end{tabular} \\\\
+
+  % Virtualised 10G
+  \begin{tabular}{ | l | L{19em} | } 
+    \hline
+    \multicolumn{2}{|c|}{ Virtualised 10G System } \\
+    \hline
+    \hline
+    OS  &  FreeBSD 11 Release \\
+    CPU &  1 x64 Intel\textsuperscript{\textregistered}\ Xeon\textsuperscript{\textregistered}\ CPU @ 1.80GHz \\
+    MEM &  512Mb \\
+    NIC &  Ethernet 10Gbase-T \\ 
+    ENV &  Hypervisor \\ 
+    \hline
+  \end{tabular} \\\\
+
+  The systems were tested on x64 FreeBSD 11 Release, with varying CPU type, CPU
+  speed, RAM and network cards. Isilon and WWU systems were both physical
+  hardware, while the Virtualised system was in a hypervisor environment hosted
+  by a third party service.
+
+  Virtualisation makes it more difficult to have the same confidence in the
+  results as with the physical machines. Tests on the Virtualised system were
+  repeated additional times to account for the variability of the underlying
+  physical hardware and contention between virtual machines.
+
+  The WWU and Virtualised tests were conducted on stock FreeBSD 11 without
+  additional network performance configuration applied. Isilon OneFS does
+  contain additional network performance tuning and demonstrates the additional
+  gains IPFWD can provide with careful FreeBSD 11 kernel configuration.
+
+  \subsection{Netperf}
+
+    % Explain tools
+    Multiple network performance tools were explored but the final results were
+    compiled using Netperf. Netperf was chosen because it was readily available
+    on all test platforms, provides built-in CPU utilization measurement, and a
+    wide range of test types \cite{netperf}.
+
+    % Explain tests
+    The test type UDP\_STREAM was chosen over TCP\_STREAM for simplicity and to
+    preserve CPU cycles for IPFW. Raw network throughput and CPU performance is
+    the target metric, which can be difficult to assess with TCP
+    \cite{TODO}.
+
+    Netperf is single threaded, which allows easier comparison of results
+    between systems with different numbers of cores. Additionally, all tests
+    were run while the system was idle to minimize contention over system
+    resources. 
+
+    % Experimental method
+    All tests were conducted using the following steps:
+    \begin{enumerate}
+        \item Machine 1
+        \begin{itemize}
+          \item \texttt{ipfw}
+          \item \texttt{netserver}
+          \item \texttt{CPU monitor}
+        \end{itemize}
+        \item Machine 2
+        \begin{itemize}
+          \item \texttt{ipfw}
+          \item \texttt{ipfwd}
+          \item \texttt{netperf}
+          \item \texttt{CPU monitor}
+        \end{itemize}
+    \end{enumerate}
+
+    All tests were run with minimal IPFW rule sets in a range of 30 to 60 rules
+    depending on the environment and network card configuration. Larger
+    production rule sets would benefit even further from IPFWD.
 
   \subsection{CPU Measurement}
 
-  CPU utilization measurement is the most difficult parameter to measure in
-  these tests. There are many factors that can account for variability between
-  tests and jitter in the results. The Netperf manual describes these
-  challenges and the variety of techniques used on different systems. 
+    CPU utilization measurement is the most difficult parameter to measure in
+    these tests. There are many factors that can account for variability
+    between tests and jitter in the results. The Netperf manual describes these
+    challenges and the variety of techniques used on different systems.
+    \cite{netperf}
 
-  Netperf was run in single threaded mode, which explains why throughput wasn't
-  closer to the maximum throughput for the NIC on each system. The FreeBSD
-  network stack allows multithreaded packet processing by utilizing multiple
-  queues. Since we're indirectly testing the performance of IPFW through
-  Netperf, there are two different CPU measurements to account for: kernel time
-  and user time. Since IPFW runs in the kernel, it's CPU time is classified as
-  kernel time.
+    Netperf was run in single threaded mode, which explains why throughput
+    wasn't closer to the maximum throughput for the NIC on each system. The
+    FreeBSD network stack allows multithreaded packet processing by utilizing
+    multiple queues \cite{freebsdhandbook}. Since we're indirectly testing the
+    performance of IPFW through Netperf, there are two different CPU
+    measurements to account for: kernel time and user time. Since IPFW runs in
+    the kernel, it's CPU time is classified as kernel time.
 
-  Netperf was able to measure CPU utilization on the Virtualized and WWU
-  systems, but didn't work on the Isilon systems. Instead, ps was used on those
-  systems.  These tests are comparable since both measured total system CPU
-  utilization TODO
+    Netperf was able to measure CPU utilization on the Virtualized and WWU
+    systems, but didn't work on the Isilon systems. Instead, \textit{ps} was
+    used. These tests are comparable since both measured user CPU utilization,
+    not kernel CPU utilization. 
+
+    In systems where the throughput of the NIC exceeds what the CPU can supply,
+    CPU utilization is high and throughput is lower than the NIC maximum (eg:
+    Virtualised system). Conversely, when CPU availablility exceeds NIC
+    throughput, throughput is high and CPU utilization is low (eg: WWU 1G
+    system).
 
 
 % Show results graphs, explain axises, etc
 \section{Results}
   
-  % throughput/CPU
-  \subsection{Throughput / CPU}
-  These graphs show network throughput divided by CPU utilization for each system. Higher values mean that the CPU time required to process packets is lower.
-  
-  \begin{center}
-  \includegraphics[width=0.45\textwidth]{toc_isilon40}
-  \includegraphics[width=0.45\textwidth]{toc_isilon10}
-  \includegraphics[width=0.45\textwidth]{toc_wwu1}
-  \includegraphics[width=0.45\textwidth]{toc_virtual10}
-  \end{center}
-  
   %  throughput & CPU
   \subsection{Throughput \& CPU}
-  These graphs show the interaction between CPU utilization and network throughput for each system with respect to IPFWD's acceptance probability. The dashed lines are CPU utilization, solid is network throughput in Mb/second. Higher acceptance probability means a greater chance that a given packet is immediately accepted without further processing.
-  
-  \begin{center}
-  \includegraphics[width=0.45\textwidth]{cpu_isilon40}
-  \includegraphics[width=0.45\textwidth]{cpu_isilon10}
-  \includegraphics[width=0.45\textwidth]{cpu_wwu1}
-  \includegraphics[width=0.45\textwidth]{cpu_virtual10}
-  \end{center}
 
-% Difference in results between CPU and throughput bound systems
+    These graphs show the interaction between CPU utilization and network
+    throughput for each system with respect to IPFWD's early acceptance
+    probability. The dashed lines are CPU utilization, solid is network
+    throughput in Mb/second. Higher acceptance probability means a greater
+    chance that a given packet is immediately accepted without further
+    processing.
+
+    The upward trend in throughput on the x-axis shows that as the early
+    acceptance probability increases, so does throughput. The CPU usage shows
+    that this throughput is gained without additional CPU utilization, meaning
+    the system is spending fewer cycles to process each packet on average.
+
+    The lack of any trend in the WWU 1G graph is expected and addressed in the
+    \textit{Discussion} section.
+    
+    \begin{center}
+      \includegraphics[width=0.45\textwidth]{cpu_isilon40}
+      \includegraphics[width=0.45\textwidth]{cpu_isilon10}
+      \includegraphics[width=0.45\textwidth]{cpu_wwu1}
+      \includegraphics[width=0.45\textwidth]{cpu_virtual10}
+    \end{center}
+
+  % throughput/CPU
+  \subsection{Throughput / CPU}
+
+    These graphs show network the ratio of throughput to CPU utilization for
+    each system where $ratio(x) = throughput(x) / cpu(x)$. The data being
+    presented here is the same as the previous graphs, shown differently. The
+    upward trend over the x-axis shows that as the probability of early
+    acceptance increases, the system is spending less CPU time to process
+    packets on average.
+
+    The dashed line shows the line of best fit for the throughput to CPU
+    utilization ratio and shows more clearly the upward trend.
+    
+    \begin{center}
+      \includegraphics[width=0.45\textwidth]{toc_isilon40}
+      \includegraphics[width=0.45\textwidth]{toc_isilon10}
+      \includegraphics[width=0.45\textwidth]{toc_wwu1}
+      \includegraphics[width=0.45\textwidth]{toc_virtual10}
+    \end{center}
+
+
+  % Difference in results between CPU and throughput bound systems
   \subsection{Discussion} 
 
-  All the systems tested can be broadly categorized into two groups: CPU bound
-  and NIC throughput bound. We can see that IPFWD affects performance
-  positively but differently for both types. 
+    All the systems tested can be broadly categorized into two groups: CPU
+    bound and NIC throughput bound. We can see that IPFWD affects performance
+    positively but differently for both types. 
 
-  In CPU bound systems, IPFWD reduces the number of cycles it takes to process
-  each packet, allowing more packets to be processed in the same time and
-  increasing throughput. This is shown most clearly in the Virtualized system
-  tests, which have the weakest CPU but 10Gb Ethernet NICs. Regardless of test
-  type, the receiving system is always at 100\% CPU utilization. However, as
-  the probability to accept increases in IPFWD the throughput also increases.
-  This clearly shows that IPFWD decreases the CPU load required to process
-  incoming traffic.
+    In CPU bound systems, IPFWD reduces the number of cycles it takes to
+    process each packet, allowing more packets to be processed in the same time
+    and increasing throughput. This is shown most clearly in the Virtualised
+    system tests, which have the weakest CPU but 10Gb Ethernet NICs. Regardless
+    of test type, the receiving system is always at 100\% CPU utilization.
+    However, as the probability to accept increases in IPFWD the throughput
+    also increases.  This clearly shows that IPFWD decreases the CPU load
+    required to process incoming traffic.
 
-  In NIC throughput bound systems, reducing the number of CPU cycles to process
-  packets will not increase throughput. However, IPFWD still reduces CPU load
-  which allows more cycles to be dedicated to other system processes. This is
-  more difficult to see in the test results, particularly since the CPU
-  measurement tools are inherently imprecise and difficult to compare between
-  systems.
+    In NIC throughput bound systems, reducing the number of CPU cycles to
+    process packets will not increase throughput. However, IPFWD still reduces
+    CPU load which allows more cycles to be dedicated to other system
+    processes. This is more difficult to see in the test results, particularly
+    since the CPU measurement tools are inherently imprecise and difficult to
+    compare between systems. 
+    
+    % WWU 1G
+    However, the WWU 1G tests provide an example of a NIC bound system. The
+    lack of any performance gains in the WWU 1G tests provides an example of
+    when IPFWD should not be used. In this system, the CPU and other system
+    resources are more than sufficient to apply the entire IPFW ruleset to each
+    packet at wire-speed. Reducing the amount of CPU time it takes to process
+    each packet does not provide any benefit.
 
 
 \section{Related Work}
-% Cisco and Juniper routers
+  % Cisco and Juniper routers
 
-Firewall decision trees? (Complete Redundancy Detection)
-TODO
+  % Similiar work
+  Related work \cite{exploitingpacketsampling, analysisnetflow,
+  monitoringpacketsampling} into packet sampling in the space of network
+  security has been focused on detecting and classifying threats, not
+  performance enhancement.
 
-% Machine learning firewalls
+  %Firewall decision trees? (Complete Redundancy Detection)
 
 
 \section{Future Work}
-% Firewall rule reordering so we can "fail as early as possible"
-Ideally, a whitelist firewall's rule set would be constructed so that the most
-commonly applied matches are reached earlier rather than later. IPFWD
-accomplishes this task by artificial early stopping. Firewall rule reordering
-is a could be another solution to this problem. Given logs of common network
-traffic for the system, statistical analysis could show which rules are matched
-more often than others. With this information, the rule set could be reordered
-so that the most commonly applied rules are earliest.
-TODO
+
+  % Firewall rule reordering so we can "fail as early as possible"
+  Ideally, a whitelist firewall's rule set would be constructed so that the
+  most commonly applied matches are reached earlier rather than later. IPFWD
+  accomplishes this task by artificial early stopping. Firewall rule reordering
+  is a could be another solution to this problem. Given logs of common network
+  traffic for the system, statistical analysis could show which rules are
+  matched more often than others. With this information, the rule set could be
+  reordered so that the most commonly applied rules are earliest.  TODO
+
+  % creating baseline invalid packet % so we can extrapolate even when we don't
+  % see any invalid packets 
+
+  % have detection of bad traffic reduce acceptance rate
 
 
 \section{Conclusion}
-TODO
-% What performance benefit do we get?
+  % What performance benefit do we get?
+  % What security cost is there?
+  % Why is this useful?
+  % Why is this important?
 
-% What security cost is there?
+  In performance sensitive computing environments, complex firewall rules
+  combined with high network throughput can result in heavy CPU load. IPFWD
+  addresses this problem by providing a graceful tradeoff between packet
+  visibility, total security policy enforcement and system performance.
 
-% Why is this useful?
+  IPFWD reduces the average amount of work to process packets by adding an
+  early rule to IPFD that has a chance to accept any packet. The security
+  implications of this behavior have been addressed and the performance
+  benefits provided have been demonstrated in a variety of systems.
 
-% Why is this important?
+  IPFWD can be directly applied to high network performance and resource
+  conscious systems with complex firewall requirements to reduce CPU load and
+  increase network throughput.
 
+  This work also serves as a proof of concept for future probabilistic packet
+  matching firewall implementations.
 
 \appendices
-\section{Additional Figures}
-TODO
+\section{Additional Information}
+  TODO link to github repository
 
 % use section* for acknowledgement
-\section*{Acknowledgment}
-TODO
+%\section*{Acknowledgment}
+% TODO
 
 
 % Can use something like this to put references on a page
@@ -737,8 +725,6 @@ TODO
 \ifCLASSOPTIONcaptionsoff
   \newpage
 \fi
-
-
 
 % trigger a \newpage just before the given reference
 % number - used to balance the columns on the last page
@@ -749,128 +735,8 @@ TODO
 %\IEEEtriggercmd{\enlargethispage{-5in}}
 
 % references section
-
-% can use a bibliography generated by BibTeX as a .bbl file
-% BibTeX documentation can be easily obtained at:
-% http://www.ctan.org/tex-archive/biblio/bibtex/contrib/doc/
-% The IEEEtran BibTeX style support page is at:
-% http://www.michaelshell.org/tex/ieeetran/bibtex/
-%\bibliographystyle{IEEEtran}
-% argument is your BibTeX string definitions and bibliography database(s)
-%\bibliography{IEEEabrv,../bib/paper}
-%
-% <OR> manually copy in the resultant .bbl file
-% set second argument of \begin to the number of references
-% (used to reserve space for the reference number labels box)
-\begin{thebibliography}{1}
-
-\bibitem{IEEEhowto:kopka}
-H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
-  0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
-
-% http://www.netperf.org/svn/netperf2/tags/netperf-2.7.0/doc/netperf.html#CPU-Utilization
-
-\end{thebibliography}
-
-% biography section
-% 
-% If you have an EPS/PDF photo (graphicx package needed) extra braces are
-% needed around the contents of the optional argument to biography to prevent
-% the LaTeX parser from getting confused when it sees the complicated
-% \includegraphics command within an optional argument. (You could create
-% your own custom macro containing the \includegraphics command to make things
-% simpler here.)
-%\begin{biography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{mshell}}]{Michael Shell}
-% or if you just want to reserve a space for a photo:
+\printbibliography
 
 
 % that's all folks
 \end{document}
-
-
-% NOTES
-%==========================================================
-% needed in second column of first page if using \IEEEpubid
-%\IEEEpubidadjcol
-
-% An example of a floating figure using the graphicx package.
-% Note that \label must occur AFTER (or within) \caption.
-% For figures, \caption should occur after the \includegraphics.
-% Note that IEEEtran v1.7 and later has special internal code that
-% is designed to preserve the operation of \label within \caption
-% even when the captionsoff option is in effect. However, because
-% of issues like this, it may be the safest practice to put all your
-% \label just after \caption rather than within \caption{}.
-%
-% Reminder: the "draftcls" or "draftclsnofoot", not "draft", class
-% option should be used if it is desired that the figures are to be
-% displayed while in draft mode.
-%
-%\begin{figure}[!t]
-%\centering
-%\includegraphics[width=2.5in]{myfigure}
-% where an .eps filename suffix will be assumed under latex, 
-% and a .pdf suffix will be assumed for pdflatex; or what has been declared
-% via \DeclareGraphicsExtensions.
-%\caption{Simulation Results}
-%\label{fig_sim}
-%\end{figure}
-
-% Note that IEEE typically puts floats only at the top, even when this
-% results in a large percentage of a column being occupied by floats.
-
-
-% An example of a double column floating figure using two subfigures.
-% (The subfig.sty package must be loaded for this to work.)
-% The subfigure \label commands are set within each subfloat command, the
-% \label for the overall figure must come after \caption.
-% \hfil must be used as a separator to get equal spacing.
-% The subfigure.sty package works much the same way, except \subfigure is
-% used instead of \subfloat.
-%
-%\begin{figure*}[!t]
-%\centerline{\subfloat[Case I]\includegraphics[width=2.5in]{subfigcase1}%
-%\label{fig_first_case}}
-%\hfil
-%\subfloat[Case II]{\includegraphics[width=2.5in]{subfigcase2}%
-%\label{fig_second_case}}}
-%\caption{Simulation results}
-%\label{fig_sim}
-%\end{figure*}
-%
-% Note that often IEEE papers with subfigures do not employ subfigure
-% captions (using the optional argument to \subfloat), but instead will
-% reference/describe all of them (a), (b), etc., within the main caption.
-
-
-% An example of a floating table. Note that, for IEEE style tables, the 
-% \caption command should come BEFORE the table. Table text will default to
-% \footnotesize as IEEE normally uses this smaller font for tables.
-% The \label must come after \caption as always.
-%
-%\begin{table}[!t]
-%% increase table row spacing, adjust to taste
-%\renewcommand{\arraystretch}{1.3}
-% if using array.sty, it might be a good idea to tweak the value of
-% \extrarowheight as needed to properly center the text within the cells
-%\caption{An Example of a Table}
-%\label{table_example}
-%\centering
-%% Some packages, such as MDW tools, offer better commands for making tables
-%% than the plain LaTeX2e tabular which is used here.
-%\begin{tabular}{|c||c|}
-%\hline
-%One & Two\\
-%\hline
-%Three & Four\\
-%\hline
-%\end{tabular}
-%\end{table}
-
-
-% Note that IEEE does not put floats in the very first column - or typically
-% anywhere on the first page for that matter. Also, in-text middle ("here")
-% positioning is not used. Most IEEE journals use top floats exclusively.
-% Note that, LaTeX2e, unlike IEEE journals, places footnotes above bottom
-% floats. This can be corrected via the \fnbelowfloat command of the
-% stfloats package.
