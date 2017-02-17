@@ -147,7 +147,7 @@ FreeBSD, IPFW, firewalls, performance.
 
   This approach is based on the premise that firewall performance can be
   improved by reducing the number of rules applied to each packet. Supposing a
-  whitelist policy, a firewall has to apply every rule to each packet before
+  white-list policy, a firewall has to apply every rule to each packet before
   it's denied.  With IPFWD, the system has a chance to accept any packet early
   and skip any further computation. Test results shows this reduces the system
   resources required to handle the same amount of traffic.
@@ -182,11 +182,11 @@ FreeBSD, IPFW, firewalls, performance.
     according to a security policy. Without a security policy, administrators
     cannot know what to allow and disallow. Typical firewalls enforce the
     policy by blocking packets that do not match the rules. The default action
-    for whitelist firewalls is to block all traffic, additional rules describe
+    for white-list firewalls is to block all traffic, additional rules describe
     exceptions. Blacklist firewalls are the opposite in that by default they
     accept all traffic and additional rules describe packet types that are not
     allowed. Since predicting and blacklisting all possible attacks is
-    infeasible, whitelist firewall rulesets are the accepted standard and the
+    infeasible, white-list firewall rule sets are the accepted standard and the
     focus of this paper.
 
   % Why was this firewall chosen?
@@ -233,24 +233,25 @@ FreeBSD, IPFW, firewalls, performance.
   IPFWD's behavior is based on the assumption that the majority of network
   traffic is valid, malicious events are rare \cite{networktrafficanalysis},
   and it's sufficient to be notified of security policy violations instead of
-  always stopping them \cite{TODO}.
+  always stopping them. These assumptions will not hold in all environments,
+  but we can leverage them for performance gains when they do.
 
   Since IPFW uses a first-match-wins rule system, this early rule will be
   encountered before the majority of the other rules in the rule set.  The
   probability given in this rule determines the chance that we skip processing
   all further rules, supposing that there hasn't been a match already.  
 
-  This is especially valuable for a whitelist firewall rule set dealing with
+  This is especially valuable for a white-list firewall rule set dealing with
   large amounts of rejected traffic; normally each rejected packet has all
   rules applied to it while IPFW looks for a match.  When no matches are
   encountered, the default rule is employed and the packet is rejected. 
 
-  In a typical data center environment the vast majority of network traffic is
-  valid and going to be accepted eventually \cite{TODO}. However, these rule
-  sets are often complex and take increasing time to match a given packet
-  depending on the length. For a rule set of length $n$, we can expect to a
-  packet to encounter $\frac{n}{2}$ failed matches before matching the correct
-  rule and being accepted.
+  In a typical data center backend network the vast majority of traffic is
+  valid and going to be accepted by the firewall's rule set. However, these
+  rule sets are often complex and take increasing time to match packets
+  depending on the number of rules. For a rule set of length $n$, we can expect
+  to a packet to encounter $\frac{n}{2}$ failed matches before matching the
+  correct rule and being accepted.
 
   IPFWD improves the average number of failed matches before a successful match
   from
@@ -316,7 +317,7 @@ FreeBSD, IPFW, firewalls, performance.
       \item \textbf{Complex Firewall Requirements}
 
         IPFWD works by reducing the average number of rules that fail to match
-        before a packet is finished being processed. Very simple rulesets will
+        before a packet is finished being processed. Very simple rule sets will
         gain little from reducing the number of rules applied to each packet.
 
       \item \textbf{Detection Based Security Policy}
@@ -333,12 +334,11 @@ FreeBSD, IPFW, firewalls, performance.
 \section{Security Implications}
 
   % Talk about security policy enforcement
-  Security policies define what is and is not allowed in an organization
-  \cite{TODO}. At the network and host level, this is implemented in part by a
-  firewall rule set. A policy violation on an internal network is more serious
-  than an external network. Internet facing hosts can expect to be scanned,
-  experience network anomalies and be attacked by third party agents
-  semi-regularly. 
+  Security policies define what is and is not allowed in an organization . At
+  the network and host level, this is implemented in part by a firewall rule
+  set. A policy violation on an internal network is more serious than an
+  external network. Internet facing hosts can expect to be scanned, experience
+  network anomalies and be attacked by third party agents semi-regularly. 
 
   However when this happens on an internal network, there is a strong
   possibility something else is going wrong. The usage of IPFWD is predicated
@@ -357,9 +357,9 @@ FreeBSD, IPFW, firewalls, performance.
     \item \textbf{Repetition} 
 
       Malicious network activity and network errors are likely to be repeated
-      over time \cite{TODO}. The longer the activity persists, the more likely
-      it is to be detected by IPFW even when IPFWD is allowing a high
-      percentage of the network traffic through unchecked.
+      over time \cite{beacondetection}. The longer the activity persists, the
+      more likely it is to be detected by IPFW even when IPFWD is allowing a
+      high percentage of the network traffic through unchecked.
 
     \item \textbf{Disruption} 
 
@@ -521,7 +521,7 @@ FreeBSD, IPFW, firewalls, performance.
     The test type UDP\_STREAM was chosen over TCP\_STREAM for simplicity and to
     preserve CPU cycles for IPFW. Raw network throughput and CPU performance is
     the target metric, which can be difficult to assess with TCP
-    \cite{TODO}.
+    \cite{netperf}.
 
     Netperf is single threaded, which allows easier comparison of results
     between systems with different numbers of cores. Additionally, all tests
@@ -654,38 +654,57 @@ FreeBSD, IPFW, firewalls, performance.
     However, the WWU 1G tests provide an example of a NIC bound system. The
     lack of any performance gains in the WWU 1G tests provides an example of
     when IPFWD should not be used. In this system, the CPU and other system
-    resources are more than sufficient to apply the entire IPFW ruleset to each
-    packet at wire-speed. Reducing the amount of CPU time it takes to process
-    each packet does not provide any benefit.
+    resources are more than sufficient to apply the entire IPFW rule set to
+    each packet at wire-speed. Reducing the amount of CPU time it takes to
+    process each packet does not provide any benefit.
 
 
 \section{Related Work}
-  % Cisco and Juniper routers
 
-  % Similiar work
-  Related work \cite{exploitingpacketsampling, analysisnetflow,
-  monitoringpacketsampling} into packet sampling in the space of network
-  security has been focused on detecting and classifying threats, not
-  performance enhancement.
+  % Packet sampling
+  Other papers \cite{exploitingpacketsampling, analysisnetflow,
+  monitoringpacketsampling} on packet sampling have been focused on detecting
+  and classifying threats, not performance enhancement. However, their
+  approaches to packet sampling and the implications addressed provided the
+  idea for IPFWD. 
 
-  %Firewall decision trees? (Complete Redundancy Detection)
+  % IPFW performance
+  The BSD community has produced several in depth investigations into network
+  and firewall performance \cite{ipfwvspf,optimizingfreebsd}. Their work
+  informed the tests run to measure IPFWD's performance benefits.
 
 
 \section{Future Work}
 
   % Firewall rule reordering so we can "fail as early as possible"
-  Ideally, a whitelist firewall's rule set would be constructed so that the
+  Ideally, a white-list firewall's rule set would be constructed so that the
   most commonly applied matches are reached earlier rather than later. IPFWD
   accomplishes this task by artificial early stopping. Firewall rule reordering
   is a could be another solution to this problem. Given logs of common network
   traffic for the system, statistical analysis could show which rules are
   matched more often than others. With this information, the rule set could be
-  reordered so that the most commonly applied rules are earliest.  TODO
+  reordered so that the most commonly applied rules are earliest. 
+
+  Other work \cite{redundancydetection} has been done in removing redundant
+  rules to increase firewall performance. It's possible that a combination of
+  redundancy checking and priority reordering could provide further performance
+  gains.
 
   % creating baseline invalid packet % so we can extrapolate even when we don't
   % see any invalid packets 
+  Machine learning could be applied to packet samples to more accurately
+  determine appropriate bounds on the early acceptance probability. Different
+  systems and circumstances may require more or less stringent packet checking.
+  Environments with very high confidence in network security might raise the
+  lower bound of the acceptance rate to improve performance. Likewise, less
+  confident environments may lower the upper bound to ensure an acceptable
+  percentage of packets are always checked.
 
   % have detection of bad traffic reduce acceptance rate
+  Future versions of IPFWD could benefit from additional modifiers to the early
+  acceptance probability. For instance, the system could reduce the early
+  acceptance probability whenever packets are dropped by the firewall under the
+  assumption that invalid traffic likely precedes more invalid traffic.
 
 
 \section{Conclusion}
@@ -696,24 +715,24 @@ FreeBSD, IPFW, firewalls, performance.
 
   In performance sensitive computing environments, complex firewall rules
   combined with high network throughput can result in heavy CPU load. IPFWD
-  addresses this problem by providing a graceful tradeoff between packet
+  addresses this problem by providing a graceful trade off between packet
   visibility, total security policy enforcement and system performance.
 
   IPFWD reduces the average amount of work to process packets by adding an
-  early rule to IPFD that has a chance to accept any packet. The security
+  early rule to IPFW that has a chance to accept any packet. The security
   implications of this behavior have been addressed and the performance
   benefits provided have been demonstrated in a variety of systems.
 
   IPFWD can be directly applied to high network performance and resource
   conscious systems with complex firewall requirements to reduce CPU load and
-  increase network throughput.
+  increase network throughput. This work also serves as a proof of concept for
+  future probabilistic packet matching firewall implementations.
 
-  This work also serves as a proof of concept for future probabilistic packet
-  matching firewall implementations.
 
 \appendices
 \section{Additional Information}
-  TODO link to github repository
+  The source code for IPFWD, additional test results, and development cycle
+  information may be found at \texttt{https://???}.
 
 % use section* for acknowledgement
 %\section*{Acknowledgment}
@@ -736,7 +755,6 @@ FreeBSD, IPFW, firewalls, performance.
 
 % references section
 \printbibliography
-
 
 % that's all folks
 \end{document}
