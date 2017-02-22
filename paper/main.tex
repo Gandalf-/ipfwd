@@ -144,7 +144,6 @@ FreeBSD, IPFW, firewalls, performance.
   Firewalls shield networks and hosts from malicious traffic by blocking
   network packets that do not match any of the rules defined in a security
   policy. 
-
   In high performance and network throughput environments, extensive packet
   processing by firewalls can limit the system's ability to utilize the full
   capacity of network links. This problem is typically addressed by restricting
@@ -161,19 +160,12 @@ FreeBSD, IPFW, firewalls, performance.
 %  administrators cannot know what to allow and disallow when constructing
 %  firewall rules.
 
-
-  \subsection{Related Work}
-
     % Packet sampling
     Other papers \cite{exploitingpacketsampling, analysisnetflow,
     monitoringpacketsampling} on packet sampling have been focused on detecting
     and classifying threats, not performance enhancement. However, their
     approaches to packet sampling and the implications addressed provided the
-    inspiration for IPFWD. Other work \cite{redundancydetection} has been done
-    in removing redundant rules to increase firewall performance.
-
-    % IPFW performance
-    The BSD community has produced several in depth investigations into network
+    inspiration for the work done here. The BSD community has produced several in depth investigations into network
     and firewall performance \cite{ipfwvspf,optimizingfreebsd}. Their work
     informed the tests run here.
 
@@ -555,22 +547,20 @@ FreeBSD, IPFW, firewalls, performance.
     resources. 
 
     % Experimental method
-    All tests were conducted using the following steps:
-    \begin{enumerate}
-        \item Machine 1
-        \begin{itemize}
-          \item \texttt{ipfw}
-          \item \texttt{netserver}
-          \item \texttt{CPU monitor}
-        \end{itemize}
-        \item Machine 2
-        \begin{itemize}
-          \item \texttt{ipfw}
-          \item \texttt{ipfwd}
-          \item \texttt{netperf}
-          \item \texttt{CPU monitor}
-        \end{itemize}
-    \end{enumerate}
+    All tests were conducted using the following setup:
+    \begin{center}
+    \begin{tabular}{ | L{10em} | L{10em} | } 
+      \hline
+      Machine 1 & Machine 2 \\
+      \hline
+      \hline
+      \texttt{ipfw}        & \texttt{ipfw} \\
+      \texttt{netserver}   & \texttt{ipfwd} \\
+      \texttt{CPU monitor} & \texttt{netperf} \\
+                           & \texttt{CPU monitor} \\
+      \hline
+    \end{tabular} \\
+    \end{center}
 
   \subsection{CPU Measurement}
 
@@ -681,7 +671,7 @@ FreeBSD, IPFW, firewalls, performance.
 
 
   % Difference in results between CPU and throughput bound systems
-  \subsection{Discussion} \label{discussion}
+  \section{Discussion} \label{discussion}
 
     All the systems tested can be broadly categorized into two groups: CPU
     bound and NIC throughput bound. We can see that IPFWD affects performance
@@ -785,13 +775,13 @@ FreeBSD, IPFW, firewalls, performance.
 \appendices
 \section{Additional Information}
   The source code for IPFWD, additional test results, and development cycle
-  information may be found at \texttt{https://TODO}.
+  information may be found at \texttt{https://github.com/Gandalf-/ipfwd}.
 
 
 \section*{Acknowledgment} 
 
 The authors would like to thank Dell EMC Isilon for providing hardware, access
-to cluster nodes for testing, and partial funding for this research. These
+to clusters for testing, and funding for this research. The
 resources and the advice on FreeBSD network capabilities/network performance
 testing were invaluable. A portion of this work was done during a summer
 internship at Dell EMC Isilon.
