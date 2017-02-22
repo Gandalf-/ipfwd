@@ -143,31 +143,22 @@ FreeBSD, IPFW, firewalls, performance.
 
   Firewalls shield networks and hosts from malicious traffic by blocking
   network packets that do not match any of the rules defined in a security
-  policy. 
-  In high performance and network throughput environments, extensive packet
-  processing by firewalls can limit the system's ability to utilize the full
-  capacity of network links. This problem is typically addressed by restricting
-  the number and complexity of firewall rules, disabling the firewall entirely,
-  or sacrificing the additional throughput so all the packet processing can be
-  completed.
-  
-%  The default action for white-list firewalls is to block all traffic,
-%  additional rules describe exceptions. Blacklist firewalls are the opposite,
-%  by default they accept all traffic and additional rules describe packet types
-%  that are not allowed. Since predicting and blacklisting all possible attacks
-%  is not possible in practice, white-list firewall rule sets are the accepted
-%  standard and the focus of this paper. Without a security policy,
-%  administrators cannot know what to allow and disallow when constructing
-%  firewall rules.
+  policy. In high performance and network throughput environments, extensive
+  packet processing by firewalls can limit the system's ability to utilize the
+  full capacity of network links. This problem is typically addressed by
+  restricting the number and complexity of firewall rules, disabling the
+  firewall entirely, or sacrificing the additional throughput so all the packet
+  processing can be completed.
 
-    % Packet sampling
-    Other papers \cite{exploitingpacketsampling, analysisnetflow,
-    monitoringpacketsampling} on packet sampling have been focused on detecting
-    and classifying threats, not performance enhancement. However, their
-    approaches to packet sampling and the implications addressed provided the
-    inspiration for the work done here. The BSD community has produced several in depth investigations into network
-    and firewall performance \cite{ipfwvspf,optimizingfreebsd}. Their work
-    informed the tests run here.
+  Our work uses a form of packet sampling to provide a trade-off between
+  complete application of a security policy and increased performance.  Other
+  papers \cite{exploitingpacketsampling, analysisnetflow,
+  monitoringpacketsampling} on packet sampling have been focused on detecting
+  and classifying threats, not performance enhancement. However, their
+  approaches to packet sampling and the implications addressed provided the
+  inspiration for the work done here. The BSD community has produced several in
+  depth investigations into network and firewall performance
+  \cite{ipfwvspf,optimizingfreebsd}. Their work informed the tests run here.
 
 
 \section{IPFW \& IPFWD}
@@ -176,7 +167,7 @@ FreeBSD, IPFW, firewalls, performance.
   Firewall) that has a chance to accept any packet. The probability of early
   acceptance is updated over time and dependent on the current system load. In
   high performance systems this can result in an increase in network
-  throughput.
+  throughput without additional CPU load.
 
   This approach is based on the premise that firewall performance can be
   improved by reducing the number of rules applied to each packet. Supposing a
