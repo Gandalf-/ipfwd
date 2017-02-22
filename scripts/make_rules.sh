@@ -11,7 +11,7 @@ fi
 base=5000
 
 for i in $(seq "$1"); do
-  num=$(( $i + $base ))
+  num=$(( i + base ))
   ipfw -q add "$num" deny ip from 127.255.0."$i" to any
 done
 

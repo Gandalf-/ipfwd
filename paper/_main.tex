@@ -90,8 +90,7 @@
 % can use linebreaks \\ within to get better formatting as desired
 \title{Probabilistic Policy Violation Detection with IPFWD}
 
-\author{Philip Nelson and Austin Voecks% <-this % stops a space
-Western Washington University
+\author{Austin Voecks and Philip Nelson% <-this % stops a space
 \thanks{Supported in part by Dell EMC Isilon through grant and hardware}}
 
 
@@ -141,47 +140,8 @@ FreeBSD, IPFW, firewalls, performance.
 
 \section{Introduction}
 
-  Firewalls shield networks and hosts from malicious traffic by blocking
-  network packets that do not match any of the rules defined in a security
-  policy. 
-
-  In high performance and network throughput environments, extensive packet
-  processing by firewalls can limit the system's ability to utilize the full
-  capacity of network links. This problem is typically addressed by restricting
-  the number and complexity of firewall rules, disabling the firewall entirely,
-  or sacrificing the additional throughput so all the packet processing can be
-  completed.
-  
-%  The default action for white-list firewalls is to block all traffic,
-%  additional rules describe exceptions. Blacklist firewalls are the opposite,
-%  by default they accept all traffic and additional rules describe packet types
-%  that are not allowed. Since predicting and blacklisting all possible attacks
-%  is not possible in practice, white-list firewall rule sets are the accepted
-%  standard and the focus of this paper. Without a security policy,
-%  administrators cannot know what to allow and disallow when constructing
-%  firewall rules.
-
-
-  \subsection{Related Work}
-
-    % Packet sampling
-    Other papers \cite{exploitingpacketsampling, analysisnetflow,
-    monitoringpacketsampling} on packet sampling have been focused on detecting
-    and classifying threats, not performance enhancement. However, their
-    approaches to packet sampling and the implications addressed provided the
-    inspiration for IPFWD. Other work \cite{redundancydetection} has been done
-    in removing redundant rules to increase firewall performance.
-
-    % IPFW performance
-    The BSD community has produced several in depth investigations into network
-    and firewall performance \cite{ipfwvspf,optimizingfreebsd}. Their work
-    informed the tests run here.
-
-
-\section{IPFW \& IPFWD}
-
-  IPFWD is a daemon for FreeBSD that updates an early rule in IPFW (the IP
-  Firewall) that has a chance to accept any packet. The probability of early
+  IPFWD is a daemon for FreeBSD that updates an early rule in the IP Firewall
+  (IPFW) that has a chance to accept any packet. The probability of early
   acceptance is updated over time and dependent on the current system load. In
   high performance systems this can result in an increase in network
   throughput.
@@ -215,6 +175,22 @@ FreeBSD, IPFW, firewalls, performance.
   automatically. Under normal or light load, IPFWD will enforce the entire
   security policy 100\% of the time.
 
+\section{IPFW}
+
+  % Firewall basics
+  \subsection{Firewall Basics}
+
+    Firewalls restrict the types of incoming and outgoing network traffic
+    according to a security policy. Without a security policy, administrators
+    cannot know what to allow and disallow when constructing firewall rules.
+    Typical firewalls enforce the policy by blocking packets that do not match
+    any rules. The default action for white-list firewalls is to block all
+    traffic, additional rules describe exceptions. Blacklist firewalls are the
+    opposite, by default they accept all traffic and additional rules describe
+    packet types that are not allowed. Since predicting and blacklisting all
+    possible attacks is not possible in practice, white-list firewall rule sets
+    are the accepted standard and the focus of this paper.
+
   % Why was this firewall chosen?
   \subsection{Choice of IPFW}
 
@@ -226,10 +202,9 @@ FreeBSD, IPFW, firewalls, performance.
 
     IPFW was chosen for its close integration with the FreeBSD operating
     system, kernel packet filter, and performance. Performance is dependent on
-    system parameters and circumstances, but IPFW outperforms the other main
-    firewall option for FreeBSD, PF, in stateful packet filtering
-    \cite{ipfwvspf}. Stateful rules are more powerful and flexible than
-    stateless rules, where no session information is maintained
+    system parameters and circumstances, but IPFW outperforms PF in stateful
+    packet filtering \cite{ipfwvspf}. Stateful rules are more powerful and
+    flexible than stateless rules, were no session information is maintained
     \cite{networksecurity}.  Additionally, the capabilities of IPFW extend
     beyond packet filtering into source based routing, traffic shaping and
     more. It's for these reasons that IFPW was chosen over PF.
@@ -238,8 +213,12 @@ FreeBSD, IPFW, firewalls, performance.
     Firewall rules are treated by IPFW in a first-match-wins fashion. IPFW also
     contains built-in functionality and rule syntax for probabilistic packet
     matching. From the documentation, this feature was intended for load
-    balancing and other traffic shaping tasks. It's the core of IPFWD's
+    balancing and other traffic shaping tasks. It's the core of IPFWDs
     operation. 
+
+    This paper is not meant as a comparison between IPFW and PF; the
+    functionality provided by IPFWD could be ported to PF and serves as a proof
+    of concept for firewalls in general.
 
 
 \section{IPFWD}
@@ -253,8 +232,7 @@ FreeBSD, IPFW, firewalls, performance.
   \begin{center}
       \verb|prob 0.000 allow ip from any to any|
   \end{center}
-  which allows any IP packet, incoming or outgoing with a chance equal to the
-  probability given.
+  which allows any IP packet, incoming or outgoing with a chance equal to the probability given.
 
   % How does it work?
   % - Probabilistic packet matching
@@ -275,12 +253,12 @@ FreeBSD, IPFW, firewalls, performance.
   rules applied to it in order to find a match. When no matches are
   encountered, the default rule is employed and the packet is rejected. 
 
-  In a typical data center internal network, the vast majority of traffic is
-  valid and going to be accepted by the firewalls rule set. However, these rule
-  sets are often complex and take increasing time to match packets depending on
-  the number of rules. For a rule set of length $n$, we can expect a packet to
-  encounter on average $\frac{n}{2}$ failed matches before matching the correct
-  rule and being accepted.
+  In a typical data center backend network, the vast majority of traffic is
+  valid and going to be accepted by the firewalls rule set. However, these
+  rule sets are often complex and take increasing time to match packets
+  depending on the number of rules. For a rule set of length $n$, we can expect
+  a packet to encounter on average $\frac{n}{2}$ failed matches before matching
+  the correct rule and being accepted.
 
   IPFWD improves the average number of failed matches before a successful match
   from
@@ -296,11 +274,11 @@ FreeBSD, IPFW, firewalls, performance.
   \Big(\frac{n}{2} \cdot \mathsf{P}(\neg{\textit{EA}})\Big) 
   \]
 
-  where $k$, a small constant compared to $n$, is number of rules before the
-  early acceptance rule and $\mathsf{P}(\textit{EA})$ is the probability that
-  the early acceptance rule is matched.
+  where $k$ is number of rules before the early acceptance rule and
+  $\mathsf{P}(\textit{EA})$ is the probability that the early acceptance rule
+  is matched.
 
-  Simplifying in order notation, IPFWD reduces the number of failed matches before
+  Removing the constant $k$, IPFWD reduces the number of failed matches before
   a successful match by a factor of
 
   \[
@@ -315,11 +293,12 @@ FreeBSD, IPFW, firewalls, performance.
   creates a chance that packets that would have normally been rejected will get
   through the firewall.
 
-  In order to provide visibility into this process, IPFWD writes its own logs
-  to include information about the early acceptance probability. From this
-  information, administrators can extrapolate the probability that additional
-  invalid packets made it through the firewall for each that is detected. This
-  is discussed further in \ref{securityimplications}.
+  In order to provide visibility into this process, IPFWD extends the IPFW
+  system logs to include information about the early acceptance probability.
+  From this information, administrators can extrapolate the probability that
+  additional invalid packets made it through the firewall for each that is
+  detected. This is discussed further in the \textit{Security Implications}
+  section.
 
   % When should this system be used?
   \subsection{Application}
@@ -330,11 +309,16 @@ FreeBSD, IPFW, firewalls, performance.
     \begin{enumerate}
       \item \textbf{High Network Performance}
 
-        The gains provided by IPFWD are only apparent in systems where network
+        The gains provided by IPFWD are only apparent in systems were network
         throughput is matched by or out performs CPU speed. Systems that can
         already easily handle fully processing each packet will not benefit by
         reducing processing time. Given modern CPU clock speeds, systems with
         network cards slower than 1 Gb/sec will likely not benefit from IPFWD.
+
+      \item \textbf{Resource Conscious}
+
+        In line with high performance systems, systems with strict resource
+        restrictions can benefit by the reduced network related CPU usage.
 
       \item \textbf{Complex Firewall Requirements}
 
@@ -354,7 +338,7 @@ FreeBSD, IPFW, firewalls, performance.
     \end{enumerate}
 
 
-\section{Security Implications} \label{securityimplications}
+\section{Security Implications}
 
   % Talk about security policy enforcement
   Security policies define what is and is not allowed in an organization. At
@@ -453,12 +437,10 @@ FreeBSD, IPFW, firewalls, performance.
 % Explain different systems and tests
 \section{Benchmarking Performance}
 
-  We benchmarked the performance of IPFW in relation to CPU usage and network
-  throughput. The goal was to determine if IPFWD reduces the average time IPFW
-  takes to process packets. Tests were run on three platforms and four
-  different network cards, referred to as four different systems. The most
-  important parameters to these tests are CPU, NIC, and ENV. Descriptions of
-  each system are given in the tables below:\\
+  Tests were run on three platforms and four different network cards, referred
+  to as four different systems. The most important parameters to these tests
+  are CPU, NIC, and ENV. Descriptions of each system are given in the tables
+  below:\\
 
   % Isilon 40G
   \begin{tabular}{ | l | L{19em} | } 
@@ -536,9 +518,7 @@ FreeBSD, IPFW, firewalls, performance.
 
     % Explain tools
     Multiple network performance tools were explored but the final results were
-    compiled using Netperf. Netperf generates network traffic between client
-    and server instances and measures throughput, errors, and other network
-    performance metrics. Netperf was chosen because it was readily available
+    compiled using Netperf. Netperf was chosen because it was readily available
     on all test platforms, provides built-in CPU utilization measurement, has a
     wide range of test types \cite{netperf}, and is used elsewhere in the BSD
     community for testing.
@@ -572,6 +552,10 @@ FreeBSD, IPFW, firewalls, performance.
         \end{itemize}
     \end{enumerate}
 
+    All tests were run with minimal IPFW rule sets in a range of 30 to 60 rules
+    depending on the environment and network card configuration. Larger
+    production rule sets would benefit even further from IPFWD.
+
   \subsection{CPU Measurement}
 
     CPU utilization measurement was the most difficult parameter to measure in
@@ -591,12 +575,15 @@ FreeBSD, IPFW, firewalls, performance.
 
     Netperf was able to measure CPU utilization on the Virtualised and WWU
     systems, but didn't work on the Isilon systems. Instead, \textit{ps} was
-    used. \texttt{ps} is a BSD utility that displays information about
-    processes, including CPU utilization. We used \texttt{ps} to poll Netperf's
-    CPU usage and averaged the output to get the results presented here. These
-    tests are comparable since both measured user CPU utilization, not kernel
-    CPU utilization. Thus, IPFWs CPU usage was measured indirectly through the
-    CPU usage of netperf.
+    used. These tests are comparable since both measured user CPU utilization,
+    not kernel CPU utilization. Thus, IPFWs CPU usage was measured indirectly
+    through the CPU usage of netperf.
+
+    In systems where the throughput of the NIC exceeds what the CPU can supply,
+    CPU utilization is high and throughput is lower than the NIC maximum (eg:
+    the Virtualised system). Conversely, when CPU availability exceeds NIC
+    throughput, throughput is high and CPU utilization is low (eg: the WWU 1G
+    system).
 
 
 % Show results graphs, explain axises, etc
@@ -605,13 +592,12 @@ FreeBSD, IPFW, firewalls, performance.
   %  throughput & CPU
   \subsection{Throughput \& CPU}
 
-    The graphs in figure \ref{fig:isiloncpu40}, \ref{fig:isiloncpu10},
-    \ref{fig:wwucpu1}, and \ref{fig:virtualcpu10} show the interaction between
-    CPU utilization and network throughput for each system with respect to
-    IPFWDs early acceptance probability. The dashed lines are CPU utilization;
-    solid is network throughput in Mb/second. A higher acceptance probability
-    means a greater chance that a given packet was immediately accepted without
-    further processing.
+    The graphs in figure \ref{fig:isiloncpu40}, \ref{fig:isiloncpu10}, \ref{fig:wwucpu1}, and \ref{fig:virtualcpu10} show the interaction between CPU utilization and network
+    throughput for each system with respect to IPFWDs early acceptance
+    probability. The dashed lines are CPU utilization; solid is network
+    throughput in Mb/second. A higher acceptance probability means a greater
+    chance that a given packet was immediately accepted without further
+    processing.
 
     The upward trend in throughput on the x-axis shows that as the early
     acceptance probability increases, so does throughput. The CPU usage shows
@@ -619,8 +605,8 @@ FreeBSD, IPFW, firewalls, performance.
     utilization, meaning the system was spending fewer cycles to process each
     packet on average.
 
-    The lack of any trend in the WWU 1G graph \ref{fig:wwucpu1} was expected
-    and will be addressed in \ref{discussion}.
+    The lack of any trend in the WWU 1G graph was expected and addressed in the
+    \textit{Discussion} section.
     
     \begin{figure}[h]
       \includegraphics[width=0.45\textwidth]{cpu_isilon40}
@@ -643,16 +629,22 @@ FreeBSD, IPFW, firewalls, performance.
       \label{fig:virtualcpu10}
     \end{figure}
     
+    %\begin{center}
+    %  \includegraphics[width=0.45\textwidth]{cpu_isilon40}
+    %  \includegraphics[width=0.45\textwidth]{cpu_isilon10}
+    %  \includegraphics[width=0.45\textwidth]{cpu_wwu1}
+    %  \includegraphics[width=0.45\textwidth]{cpu_virtual10}
+    %\end{center}
+
   % throughput/CPU
   \subsection{Throughput / CPU}
 
-    The graphs in figures \ref{fig:isilontoc40}, \ref{fig:isilontoc10},
-    \ref{fig:wwutoc1}, and \ref{fig:virtualtoc10}  show network the ratio of
-    throughput to CPU utilization for each system where $ratio(x) =
-    throughput(x) / cpu(x)$. The data being presented here is the same as the
-    previous graphs, merely shown differently. The upward trend over the x-axis
-    shows that as the probability of early acceptance increases, the system is
-    spending less CPU time to process packets on average.
+    The graphs in figures \ref{fig:isilontoc40}, \ref{fig:isilontoc10}, \ref{fig:wwutoc1}, and \ref{fig:virtualtoc10}  show network the ratio of throughput to CPU utilization for
+    each system where $ratio(x) = throughput(x) / cpu(x)$. The data being
+    presented here is the same as the previous graphs, merely shown
+    differently. The upward trend over the x-axis shows that as the probability
+    of early acceptance increases, the system is spending less CPU time to
+    process packets on average.
 
     The dashed line shows the line of best fit for the throughput to CPU
     utilization ratio and shows the upward trend more clearly than the raw
@@ -678,10 +670,17 @@ FreeBSD, IPFW, firewalls, performance.
       \caption{Throughput/CPU for Virtualised 10G system}
       \label{fig:virtualtoc10}
     \end{figure}
+    
+    %\begin{center}
+    %  \includegraphics[width=0.45\textwidth]{toc_isilon40}
+    %  \includegraphics[width=0.45\textwidth]{toc_isilon10}
+    %  \includegraphics[width=0.45\textwidth]{toc_wwu1}
+    %  \includegraphics[width=0.45\textwidth]{toc_virtual10}
+    %\end{center}
 
 
   % Difference in results between CPU and throughput bound systems
-  \subsection{Discussion} \label{discussion}
+  \subsection{Discussion} 
 
     All the systems tested can be broadly categorized into two groups: CPU
     bound and NIC throughput bound. We can see that IPFWD affects performance
@@ -711,16 +710,20 @@ FreeBSD, IPFW, firewalls, performance.
     each packet at wire-speed. Reducing the amount of CPU time it takes to
     process each packet does not provide any benefit.
 
-    In summary, systems where the throughput of the NIC exceeds what the CPU
-    can supply CPU utilization is high and throughput is lower than the NIC
-    maximum (eg: the Virtualised system \ref{fig:virtualcpu10}). Conversely,
-    when CPU availability exceeds NIC throughput, throughput is high and CPU
-    utilization is low (eg: the WWU 1G system \ref{fig:wwucpu1}).
 
-    Additionally, all tests were run with minimal IPFW rule sets in a range of
-    30 to 60 rules depending on the environment and network card configuration.
-    Larger production rule sets would benefit even further from IPFWD.
+\section{Related Work}
 
+  % Packet sampling
+  Other papers \cite{exploitingpacketsampling, analysisnetflow,
+  monitoringpacketsampling} on packet sampling have been focused on detecting
+  and classifying threats, not performance enhancement. However, their
+  approaches to packet sampling and the implications addressed provided the
+  inspiration for IPFWD. 
+
+  % IPFW performance
+  The BSD community has produced several in depth investigations into network
+  and firewall performance \cite{ipfwvspf,optimizingfreebsd}. Their work
+  informed the tests run here.
 
 
 \section{Future Work}
@@ -732,25 +735,22 @@ FreeBSD, IPFW, firewalls, performance.
   could be another solution to this problem. Given logs of common network
   traffic for the system, statistical analysis could show which rules are
   matched more often than others. With this information, the rule set could be
-  reordered so that the most commonly applied rules are earliest. A combination
-  of redundancy checking and priority reordering could provide further
-  performance gains as well.
+  reordered so that the most commonly applied rules are earliest. 
+
+  Other work \cite{redundancydetection} has been done in removing redundant
+  rules to increase firewall performance. It is possible that a combination of
+  redundancy checking and priority reordering could provide further performance
+  gains.
 
   % creating baseline invalid packet % so we can extrapolate even when we don't
   % see any invalid packets 
-  Further analysis could be done to packet samples in order to more accurately
+  Machine learning could be applied to packet samples to more accurately
   determine appropriate bounds on the early acceptance probability. Different
   systems and environments may require more or less stringent packet checking.
   Environments with very high confidence in network security might raise the
   lower bound of the acceptance rate to improve performance. Likewise, less
   confident environments may lower the upper bound to ensure an acceptable
   percentage of packets are always checked.
-
-  % mutli threaded netperf tests
-  The tests conducted here were restricted to one core; future work could
-  explore the interaction of early acceptance on parallel firewall packet
-  processing. Running additional, concurrent netperf tests would show how the
-  system behaves when the links are fully saturated.
 
   % have detection of bad traffic reduce acceptance rate
   Future versions of IPFWD could benefit from additional modifiers to the early
@@ -788,15 +788,6 @@ FreeBSD, IPFW, firewalls, performance.
   information may be found at \texttt{https://TODO}.
 
 
-\section*{Acknowledgment} 
-
-The authors would like to thank Dell EMC Isilon for providing hardware, access
-to cluster nodes for testing, and partial funding for this research. These
-resources and the advice on FreeBSD network capabilities/network performance
-testing were invaluable. A portion of this work was done during a summer
-internship at Dell EMC Isilon.
-
-
 % Can use something like this to put references on a page
 % by themselves when using endfloat and the captionsoff option.
 \ifCLASSOPTIONcaptionsoff
@@ -816,3 +807,4 @@ internship at Dell EMC Isilon.
 
 % that's all folks
 \end{document}
+
